@@ -34,18 +34,110 @@ Screenshots will be added as the visual design is refined.
 
 ## Installation
 
-For development:
+LumaFrame is currently installed manually as a community plugin. It is not published in the official Obsidian Community Plugins directory yet.
 
-1. Clone this repository.
-2. Run `npm install`.
-3. Run `npm run build`.
-4. Copy `main.js`, `manifest.json` and `styles.css` into:
+### Option 1: Install From GitHub
 
-```text
-<your vault>/.obsidian/plugins/lumaframe/
+1. Open the repository:
+
+   [github.com/loopman90/LumaFrame](https://github.com/loopman90/LumaFrame)
+
+2. Download or clone the project.
+
+3. Build the plugin:
+
+   ```bash
+   npm install
+   npm run build
+   ```
+
+4. In your Obsidian vault, create this folder if it does not exist:
+
+   ```text
+   <your vault>/.obsidian/plugins/lumaframe/
+   ```
+
+5. Copy these files from the LumaFrame project into that folder:
+
+   ```text
+   main.js
+   manifest.json
+   styles.css
+   ```
+
+6. Restart Obsidian.
+
+7. Open Obsidian settings.
+
+8. Go to **Community plugins**.
+
+9. Turn off **Restricted mode** if needed.
+
+10. Enable **LumaFrame**.
+
+### Option 2: Development Install
+
+Use this when you want to keep editing the plugin code.
+
+```bash
+git clone https://github.com/loopman90/LumaFrame.git
+cd LumaFrame
+npm install
+npm run build
 ```
 
-5. Enable LumaFrame in Obsidian settings.
+Then copy the built files into your vault plugin folder:
+
+```bash
+mkdir -p "<your vault>/.obsidian/plugins/lumaframe"
+cp main.js manifest.json styles.css "<your vault>/.obsidian/plugins/lumaframe/"
+```
+
+For active development, run:
+
+```bash
+npm run dev
+```
+
+After changes, reload Obsidian or disable and re-enable the plugin.
+
+### Option 3: Symlink For Development
+
+Advanced users can symlink the repository directly into an Obsidian vault:
+
+```bash
+ln -s "/path/to/LumaFrame" "<your vault>/.obsidian/plugins/lumaframe"
+cd "/path/to/LumaFrame"
+npm install
+npm run dev
+```
+
+This keeps the plugin folder connected to your local Git checkout.
+
+### Required Files
+
+Obsidian needs these files in the plugin folder:
+
+```text
+main.js
+manifest.json
+styles.css
+```
+
+Source files such as `src/`, `tests/` and `package.json` are useful for development, but Obsidian only needs the built plugin files to load LumaFrame.
+
+### Updating
+
+To update a manual install:
+
+```bash
+git pull
+npm install
+npm run build
+cp main.js manifest.json styles.css "<your vault>/.obsidian/plugins/lumaframe/"
+```
+
+Then reload Obsidian.
 
 ## Quick Start
 
