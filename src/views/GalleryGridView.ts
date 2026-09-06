@@ -56,7 +56,7 @@ export class GalleryGridView extends ItemView {
     footer.createSpan({ text: item.name });
     const actions = footer.createDiv({ cls: "lumaframe-gallery-actions" });
     this.action(actions, this.plugin.settings.favorites[item.id] ? "★" : "☆", "Favorite", () => void this.toggleFavorite(item));
-    this.action(actions, "▶", "Start playback from item", () => void this.startPlayback());
+    this.action(actions, "▶", "Start playback from item", () => void this.startPlayback(item));
     this.action(actions, "＋", "Add to Playlist", () => this.openPlaylistMenu(actions, item));
     this.action(actions, "✎", "Create Note", () => void this.createMediaNote(item));
     this.action(actions, "✐", "Rename", () => this.renameVaultFile(item));
@@ -76,8 +76,8 @@ export class GalleryGridView extends ItemView {
     this.render();
   }
 
-  private async startPlayback(): Promise<void> {
-    await this.plugin.openPlayer();
+  private async startPlayback(item: MediaItem): Promise<void> {
+    await this.plugin.openPlayerAt(item.id);
     new Notice("Playback opened.");
   }
 

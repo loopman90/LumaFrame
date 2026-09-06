@@ -26,7 +26,7 @@ export class PlaybackController {
     private readonly events: PlaybackEvents
   ) {}
 
-  start(media: MediaItem[]): void {
+  start(media: MediaItem[], startMediaId?: string): void {
     this.media = media;
     this.session.paused = this.profile.startPaused;
     if (this.profile.rememberShuffle && this.settings.shuffleStates[this.profile.id]?.queue.length) {
@@ -36,7 +36,8 @@ export class PlaybackController {
       this.session.queuePosition = Math.min(saved.queuePosition, Math.max(this.session.queue.length - 1, 0));
     }
     if (this.session.queue.length === 0) this.rebuildQueue();
-    this.goTo(this.session.queuePosition);
+    const startPosition = startMediaId ? this.session.queue.indexOf(startMediaId) : this.session.queuePosition;
+    this.goTo(startPosition >= 0 ? startPosition : this.session.queuePosition);
     this.events.onPausedChanged(this.session.paused);
   }
 

@@ -73,7 +73,7 @@ export class LumaFrameView extends ItemView {
     if (this.hideControlsTimer !== null) window.clearTimeout(this.hideControlsTimer);
   }
 
-  async startDefaultProfile(): Promise<void> {
+  async startDefaultProfile(startMediaId?: string): Promise<void> {
     await this.plugin.refreshMedia();
     const profile = this.plugin.settings.profiles.find((candidate) => candidate.id === this.plugin.settings.defaultProfileId);
     const preset = this.plugin.settings.presets.find((candidate) => candidate.id === profile?.presetId);
@@ -87,7 +87,7 @@ export class LumaFrameView extends ItemView {
       return;
     }
     this.emptyState.hide();
-    this.createController(profile, preset, media);
+    this.createController(profile, preset, media, startMediaId);
   }
 
   playPause(): void {
@@ -139,7 +139,7 @@ export class LumaFrameView extends ItemView {
     this.overlay.update(item, this.currentPosition(), this.currentTotal(), preset.overlays.showInfo);
   }
 
-  private createController(profile: GalleryProfile, preset: GalleryPreset, media: MediaItem[]): void {
+  private createController(profile: GalleryProfile, preset: GalleryPreset, media: MediaItem[], startMediaId?: string): void {
     const session: GallerySession = {
       instanceId: createId("session"),
       profileId: profile.id,
@@ -155,7 +155,7 @@ export class LumaFrameView extends ItemView {
       onStatsChanged: async () => this.plugin.saveSettings(),
       onQueueChanged: async () => this.plugin.saveSettings()
     });
-    this.controller.start(media);
+    this.controller.start(media, startMediaId);
     if (this.plugin.settings.autoFullscreen) void this.toggleFullscreen(this.contentEl);
   }
 

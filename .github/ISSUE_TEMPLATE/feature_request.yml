@@ -1,0 +1,37 @@
+name: Feature request
+description: Suggest an improvement for LumaFrame.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What should LumaFrame help you do?
+      description: Describe the workflow or outcome.
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Suggested solution
+      description: What would feel natural in the app?
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Sources
+        - Gallery
+        - Playback
+        - Playlists
+        - Profiles
+        - Presets
+        - Sessions
+        - Mobile
+        - Other
+  - type: textarea
+    id: privacy
+    attributes:
+      label: Privacy considerations
+      description: Would this require reading more files, metadata, or external folders?

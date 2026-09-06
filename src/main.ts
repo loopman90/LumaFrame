@@ -27,6 +27,7 @@ export default class LumaFramePlugin extends Plugin {
   private settingsStore!: SettingsStore;
   private refreshQueued = false;
   private readonly sourceService = new SourceService();
+  private pendingStartMediaId: string | null = null;
 
   async onload(): Promise<void> {
     this.settingsStore = new SettingsStore(this);
@@ -69,6 +70,17 @@ export default class LumaFramePlugin extends Plugin {
     const existing = this.app.workspace.getLeavesOfType(LUMAFRAME_VIEW_TYPE)[0];
     const leaf = existing ?? this.app.workspace.getLeaf(true);
     await leaf.setViewState({ type: LUMAFRAME_VIEW_TYPE, active: true });
+    const view = leaf.view;
+    if (view instanceof LumaFrameView && this.pendingStartMediaId) {
+      const startMediaId = this.pendingStartMediaId;
+      this.pendingStartMediaId = null;
+      await view.startDefaultProfile(startMediaId);
+    }
+  }
+
+  async openPlayerAt(mediaId: string): Promise<void> {
+    this.pendingStartMediaId = mediaId;
+    await this.openPlayer();
   }
 
   async openGallery(): Promise<void> {

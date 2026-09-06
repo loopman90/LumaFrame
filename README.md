@@ -28,10 +28,6 @@ The first-run experience is deliberately simple:
 - Keyboard controls
 - No telemetry, analytics, accounts, AI or cloud processing
 
-## Screenshots
-
-Screenshots will be added as the visual design is refined.
-
 ## Installation
 
 LumaFrame is currently installed manually as a community plugin. It is not published in the official Obsidian Community Plugins directory yet.
@@ -147,6 +143,12 @@ Then reload Obsidian.
 4. Choose a Mode.
 5. Run **Open** from the LumaFrame command group.
 
+## Project Docs
+
+- [Changelog](CHANGELOG.md)
+- [Testing checklist](TESTING.md)
+- [Security and privacy](SECURITY.md)
+
 ## Supported Media
 
 Images:
@@ -229,6 +231,8 @@ Core vault Sources, image playback, GIFs, supported videos, presets, profiles an
 LumaFrame is completely local.
 
 It does not implement analytics, telemetry, cloud processing, AI, external APIs, accounts, tracking or remote databases. It does not upload media, filenames, folder names, metadata or usage data.
+
+The community build scans only vault folders explicitly added as Sources. External desktop folder scanning is reserved for future work through an approved adapter.
 
 ## Language
 
