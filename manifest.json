@@ -1,0 +1,10 @@
+{
+  "id": "lumaframe",
+  "name": "LumaFrame",
+  "version": "0.1.0",
+  "minAppVersion": "1.5.0",
+  "description": "Turn photos, GIFs and videos into a customizable ambient gallery and digital photo frame inside Obsidian.",
+  "author": "",
+  "authorUrl": "",
+  "isDesktopOnly": false
+}
