@@ -2,6 +2,12 @@
 
 All notable changes to LumaFrame are documented here.
 
+## 0.1.8
+
+- Added a searchable vault folder selector for adding Sources.
+- Kept manual path entry as an advanced fallback.
+- Updated manual installation files for the folder selector build.
+
 ## 0.1.7
 
 - Converted absolute paths inside the current vault to vault-relative Source paths.

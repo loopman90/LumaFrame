@@ -10,6 +10,7 @@ import { SourceService } from "../services/SourceService";
 import { supportsExternalFolders } from "../utils/platform";
 import { ConfirmModal } from "../ui/ConfirmModal";
 import { TextPromptModal } from "../ui/TextPromptModal";
+import { VaultFolderSuggestModal } from "../ui/VaultFolderSuggestModal";
 
 export class LumaFrameSettingsTab extends PluginSettingTab {
   private readonly sourceService = new SourceService();
@@ -148,11 +149,18 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
 
     new Setting(container)
       .setName("Add Vault Folder")
-      .setDesc("Enter a folder path from this vault, for example Photos/Family. Absolute paths inside this vault are converted automatically.")
+      .setDesc("Choose a folder from this vault. You can also enter a vault path manually.")
       .addText((text) => {
         text.setPlaceholder("Photos/Family");
         text.inputEl.addClass("lumaframe-source-input");
       })
+      .addButton((button) =>
+        button.setButtonText("Choose").setCta().onClick(() => {
+          new VaultFolderSuggestModal(this.app, (folder) => {
+            void this.addVaultSource(folder.path);
+          }).open();
+        })
+      )
       .addButton((button) =>
         button.setButtonText("Add").onClick(async () => {
           const input = container.querySelector<HTMLInputElement>(".lumaframe-source-input");

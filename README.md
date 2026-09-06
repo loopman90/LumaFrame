@@ -178,7 +178,7 @@ Sources answer: **Where does the media come from?**
 
 LumaFrame only scans Sources explicitly added by the user. It never scans the whole vault, home directory, Pictures folder, Downloads folder or drives automatically.
 
-Use a folder inside your current Obsidian vault. If you paste an absolute path that points inside the current vault, LumaFrame converts it to the matching vault path automatically.
+Use **Choose** in the Source settings to pick a folder from inside your current Obsidian vault. You can also enter a vault path manually. If you paste an absolute path that points inside the current vault, LumaFrame converts it to the matching vault path automatically.
 
 External desktop folders are not scanned in the community build. Move or copy media into your vault, then add that vault folder as a Source.
 
@@ -244,6 +244,6 @@ LumaFrame's plugin interface, documentation, settings, commands and user-facing 
 
 ## Troubleshooting
 
-If no media appears, check that at least one Source is enabled and that the folder is inside the current vault.
+If no media appears, check that at least one Source is enabled and that the folder is inside the current vault. The **Choose** button in Source settings is the safest way to select a working folder.
 
 If a video does not play, the device may not support that format. LumaFrame skips unsupported media and continues playback.
