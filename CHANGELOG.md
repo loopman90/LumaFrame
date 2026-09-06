@@ -2,6 +2,12 @@
 
 All notable changes to LumaFrame are documented here.
 
+## 0.1.9
+
+- Added a desktop external folder picker for Sources.
+- Enabled scanning of explicitly selected external folders on desktop.
+- Rendered external media through local file URLs for macOS, Linux and Windows paths.
+
 ## 0.1.8
 
 - Added a searchable vault folder selector for adding Sources.

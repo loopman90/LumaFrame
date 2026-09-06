@@ -2,6 +2,7 @@ import { App, TFile } from "obsidian";
 import type { GalleryPreset } from "../models/GalleryPreset";
 import type { MediaItem } from "../models/MediaItem";
 import type { LumaFrameSettings } from "../models/PluginSettings";
+import { localFileUrl } from "../utils/fileUrl";
 import { canProbablyPlayVideo } from "../utils/mediaTypes";
 
 export interface RenderedMedia {
@@ -73,6 +74,6 @@ export class MediaRenderer {
     if (file instanceof TFile) {
       return this.app.vault.getResourcePath(file);
     }
-    return item.path;
+    return localFileUrl(item.path);
   }
 }

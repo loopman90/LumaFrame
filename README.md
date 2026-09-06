@@ -12,7 +12,8 @@ The first-run experience is deliberately simple:
 
 - Local-first media playback inside Obsidian
 - Explicit vault media Sources
-- Clear guidance when a selected folder is outside the current vault
+- Vault folder selector for macOS, Linux, Windows and mobile
+- Desktop external folder selector for explicitly chosen local folders
 - Lightweight media index
 - Image, GIF, WebP, AVIF and common video file detection
 - Video playback that advances only after the video ends
@@ -180,7 +181,7 @@ LumaFrame only scans Sources explicitly added by the user. It never scans the wh
 
 Use **Choose** in the Source settings to pick a folder from inside your current Obsidian vault. You can also enter a vault path manually. If you paste an absolute path that points inside the current vault, LumaFrame converts it to the matching vault path automatically.
 
-External desktop folders are not scanned in the community build. Move or copy media into your vault, then add that vault folder as a Source.
+Use **Choose** under **Add External Folder** on desktop to select a local folder outside your vault. External folders are available on macOS, Linux and Windows desktop builds. Mobile uses vault Sources only.
 
 ## Profiles
 
@@ -228,7 +229,7 @@ The architecture separates Sessions from Profiles so independent windows and mon
 
 ## Mobile Support
 
-Core vault Sources, image playback, GIFs, supported videos, presets, profiles and gallery views are designed to work without desktop-only APIs. External folder scanning, native file watching, kiosk and second-screen features are desktop-oriented future work.
+Core vault Sources, image playback, GIFs, supported videos, presets, profiles and gallery views are designed to work without desktop-only APIs. External folder scanning, native file watching, kiosk and second-screen features are desktop-oriented.
 
 ## Privacy
 
@@ -236,7 +237,7 @@ LumaFrame is completely local.
 
 It does not implement analytics, telemetry, cloud processing, AI, external APIs, accounts, tracking or remote databases. It does not upload media, filenames, folder names, metadata or usage data.
 
-The community build scans only vault folders explicitly added as Sources. External desktop folder scanning is reserved for future work through an approved adapter.
+The community build scans only folders explicitly added as Sources. Vault Sources are scanned through the Obsidian API. External desktop Sources are scanned locally on desktop only.
 
 ## Language
 

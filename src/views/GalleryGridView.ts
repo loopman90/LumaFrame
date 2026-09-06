@@ -3,6 +3,7 @@ import type LumaFramePlugin from "../main";
 import type { MediaItem } from "../models/MediaItem";
 import { ConfirmModal } from "../ui/ConfirmModal";
 import { TextPromptModal } from "../ui/TextPromptModal";
+import { localFileUrl } from "../utils/fileUrl";
 
 export const LUMAFRAME_GALLERY_VIEW_TYPE = "lumaframe-gallery";
 
@@ -46,7 +47,7 @@ export class GalleryGridView extends ItemView {
   private renderItem(grid: HTMLElement, item: MediaItem): void {
     const card = grid.createDiv({ cls: "lumaframe-gallery-card" });
     const file = this.app.vault.getAbstractFileByPath(item.path);
-    const url = file instanceof TFile ? this.app.vault.getResourcePath(file) : item.path;
+    const url = file instanceof TFile ? this.app.vault.getResourcePath(file) : localFileUrl(item.path);
     if (item.type === "video") {
       card.createEl("video", { cls: "lumaframe-gallery-thumb", attr: { src: url, muted: "true", preload: "metadata" } });
     } else {

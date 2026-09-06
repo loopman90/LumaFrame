@@ -29,4 +29,4 @@ YourVault/.obsidian/plugins/lumaframe/
 
 LumaFrame runs locally and does not upload media, filenames, folder names, metadata or usage data.
 
-External desktop folders are not scanned in the community build. Put media inside your vault, then add that vault folder.
+External folders can be selected on desktop. Mobile uses vault folders only.
