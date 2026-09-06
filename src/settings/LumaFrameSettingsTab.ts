@@ -27,7 +27,6 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
     containerEl.addClass("lumaframe-settings");
-    new Setting(containerEl).setName("LumaFrame").setHeading();
     containerEl.createEl("p", { text: "Turn your media into a living gallery." });
 
     new Setting(containerEl)
@@ -343,7 +342,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
         })
       )
       .addButton((button) =>
-        button.setButtonText("Delete").setDestructive().onClick(() => {
+        button.setButtonText("Delete").setWarning().onClick(() => {
           new ConfirmModal(this.app, "Delete Playlist?", "This only removes the playlist. Original media stays unchanged.", "Delete", async () => {
             this.plugin.settings.playlists = this.plugin.settings.playlists.filter((candidate) => candidate.id !== playlist.id);
             this.plugin.settings.profiles.forEach((profile) => {
@@ -429,7 +428,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
       .addButton((button) =>
         button
           .setButtonText("Delete")
-          .setDestructive()
+          .setWarning()
           .setDisabled(this.plugin.settings.profiles.length <= 1)
           .onClick(() => {
             new ConfirmModal(this.app, "Delete Profile?", "The referenced Sources, Playlists and Presets stay unchanged.", "Delete", async () => {

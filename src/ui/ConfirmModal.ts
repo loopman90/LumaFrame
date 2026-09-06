@@ -20,7 +20,7 @@ export class ConfirmModal extends Modal {
       .addButton((button) =>
         button
           .setButtonText(this.confirmText)
-          .setDestructive()
+          .setWarning()
           .onClick(async () => {
             await this.onConfirm();
             this.close();
