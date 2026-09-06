@@ -19,16 +19,17 @@ All three commands should pass before tagging a release.
 3. Restart Obsidian.
 4. Enable LumaFrame from Community plugins.
 5. Confirm the first-run onboarding opens.
-6. Add a vault folder Source that contains a few images by using the **Choose** button.
-7. Open the LumaFrame player.
-8. Confirm an image appears.
-9. Test Play/Pause, Next and Previous.
-10. Open the Gallery.
-11. Favorite an item.
-12. Hide an item and confirm it disappears from playback.
-13. Create a playlist and add a gallery item to it.
-14. Start playback from a specific gallery item.
-15. Create a media note for a vault item.
+6. Confirm the `LumaFrame Media` folder exists in the vault.
+7. Add a few images to `LumaFrame Media`.
+8. Open the LumaFrame player.
+9. Confirm an image appears.
+10. Test Play/Pause, Next and Previous.
+11. Open the Gallery.
+12. Favorite an item.
+13. Hide an item and confirm it disappears from playback.
+14. Create a playlist and add a gallery item to it.
+15. Start playback from a specific gallery item.
+16. Create a media note for a vault item.
 
 ## Media Checks
 
@@ -46,6 +47,7 @@ Unsupported media should show a friendly message and playback should continue.
 
 - Confirm no network requests are introduced.
 - Confirm only explicitly added Sources are scanned.
+- Confirm `LumaFrame Media` is created as a vault Source.
 - Confirm the Source folder selector lists vault folders on desktop and mobile.
 - Confirm no media, filenames, folder names or metadata are uploaded.
 - Confirm external folder controls are disabled in the community build.

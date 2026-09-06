@@ -12,8 +12,8 @@ The first-run experience is deliberately simple:
 
 - Local-first media playback inside Obsidian
 - Explicit vault media Sources
+- Automatically creates a `LumaFrame Media` vault folder for photos and videos
 - Vault folder selector for macOS, Linux, Windows and mobile
-- Clear disabled state for external folder Sources in the community build
 - Lightweight media index
 - Image, GIF, WebP, AVIF and common video file detection
 - Video playback that advances only after the video ends
@@ -139,7 +139,7 @@ Then reload Obsidian.
 ## Quick Start
 
 1. Open LumaFrame settings.
-2. Add one or more vault folders under Sources.
+2. Add photos or videos to the `LumaFrame Media` folder in your vault, or add another vault folder under Sources.
 3. Choose a Preset.
 4. Choose a Mode.
 5. Run **Open** from the LumaFrame command group.
@@ -178,6 +178,8 @@ MOV is not listed as guaranteed support. LumaFrame only plays media when the cur
 Sources answer: **Where does the media come from?**
 
 LumaFrame only scans Sources explicitly added by the user. It never scans the whole vault, home directory, Pictures folder, Downloads folder or drives automatically.
+
+On startup, LumaFrame creates a `LumaFrame Media` folder in your vault and adds it as a Source. Put photos, GIFs or videos in that folder and LumaFrame will see them.
 
 Use **Choose** in the Source settings to pick a folder from inside your current Obsidian vault. You can also enter a vault path manually. If you paste an absolute path that points inside the current vault, LumaFrame converts it to the matching vault path automatically.
 
@@ -229,7 +231,7 @@ The architecture separates Sessions from Profiles so independent windows and mon
 
 ## Mobile Support
 
-Core vault Sources, image playback, GIFs, supported videos, presets, profiles and gallery views are designed to work without desktop-only APIs. External folder scanning, native file watching, kiosk and second-screen features are desktop-oriented.
+Core vault Sources, image playback, GIFs, supported videos, presets, profiles and gallery views are designed to work without desktop-only APIs. Native file watching, kiosk and second-screen features are desktop-oriented future work.
 
 ## Privacy
 
@@ -237,7 +239,7 @@ LumaFrame is completely local.
 
 It does not implement analytics, telemetry, cloud processing, AI, external APIs, accounts, tracking or remote databases. It does not upload media, filenames, folder names, metadata or usage data.
 
-The community build scans only folders explicitly added as Sources. Vault Sources are scanned through the Obsidian API. External desktop Sources are scanned locally on desktop only.
+The community build scans only vault folders explicitly added as Sources. Vault Sources are scanned through the Obsidian API.
 
 ## Language
 

@@ -27,7 +27,7 @@ LumaFrame does not include:
 
 LumaFrame only scans folders explicitly added as Sources by the user.
 
-The community build scans vault folders through the Obsidian API. It does not scan external desktop folders with direct filesystem access.
+The community build scans vault folders through the Obsidian API. It creates a `LumaFrame Media` vault folder as a convenient default Source. It does not scan external desktop folders with direct filesystem access.
 
 ## Reporting Security Issues
 

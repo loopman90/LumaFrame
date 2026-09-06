@@ -2,6 +2,12 @@
 
 All notable changes to LumaFrame are documented here.
 
+## 0.1.14
+
+- Removed the Add External Folder control from the community build.
+- Automatically creates a `LumaFrame Media` vault folder.
+- Adds `LumaFrame Media` as a default vault Source for new media.
+
 ## 0.1.13
 
 - Kept the External Folder Choose button visible in the community build.

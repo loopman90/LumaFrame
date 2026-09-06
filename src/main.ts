@@ -1,4 +1,4 @@
-import { Menu, Notice, Plugin, TAbstractFile, TFile, TFolder } from "obsidian";
+import { Menu, Notice, Plugin, TAbstractFile, TFile, TFolder, normalizePath } from "obsidian";
 import { DEFAULT_PROFILE, DEFAULT_SETTINGS } from "./models/defaults";
 import type { GalleryProfile } from "./models/GalleryProfile";
 import type { LumaFrameSettings } from "./models/PluginSettings";
@@ -18,6 +18,8 @@ import { GalleryGridView, LUMAFRAME_GALLERY_VIEW_TYPE } from "./views/GalleryGri
 import { LumaFrameView, LUMAFRAME_VIEW_TYPE } from "./views/LumaFrameView";
 import { isSupportedMediaPath } from "./utils/mediaTypes";
 
+const DEFAULT_MEDIA_FOLDER = "LumaFrame Media";
+
 export default class LumaFramePlugin extends Plugin {
   settings: LumaFrameSettings = DEFAULT_SETTINGS;
   mediaLibrary!: MediaLibrary;
@@ -32,6 +34,7 @@ export default class LumaFramePlugin extends Plugin {
   async onload(): Promise<void> {
     this.settingsStore = new SettingsStore(this);
     this.settings = await this.settingsStore.load();
+    await this.ensureDefaultMediaFolder();
     this.mediaLibrary = new MediaLibrary(new MediaScanner(this.app, new ExternalFolderService()));
 
     this.registerView(LUMAFRAME_VIEW_TYPE, (leaf) => new LumaFrameView(leaf, this));
@@ -54,6 +57,29 @@ export default class LumaFramePlugin extends Plugin {
 
   async refreshMedia(): Promise<void> {
     await this.mediaLibrary.refresh(this.settings);
+  }
+
+  private async ensureDefaultMediaFolder(): Promise<void> {
+    const folderPath = normalizePath(DEFAULT_MEDIA_FOLDER);
+    const existing = this.app.vault.getAbstractFileByPath(folderPath);
+    if (!existing) {
+      await this.app.vault.createFolder(folderPath);
+    } else if (!(existing instanceof TFolder)) {
+      new Notice("LumaFrame Media already exists but is not a folder.");
+      return;
+    }
+
+    let source = this.settings.sources.find((candidate) => candidate.type === "vault" && candidate.path === folderPath);
+    if (!source) {
+      source = this.sourceService.createVaultSource(folderPath);
+      this.settings.sources.push(source);
+    }
+
+    const profile = this.defaultProfile();
+    if (!profile.sourceIds.includes(source.id)) {
+      profile.sourceIds = [...new Set([...profile.sourceIds, source.id])];
+    }
+    await this.saveSettings();
   }
 
   defaultProfile(): GalleryProfile {

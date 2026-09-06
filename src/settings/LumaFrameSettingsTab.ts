@@ -6,15 +6,12 @@ import type { Playlist } from "../models/Playlist";
 import { PlaylistService } from "../services/PlaylistService";
 import { PresetService } from "../services/PresetService";
 import { ProfileService } from "../services/ProfileService";
-import { ExternalFolderService } from "../services/ExternalFolderService";
 import { SourceService } from "../services/SourceService";
-import { supportsExternalFolders } from "../utils/platform";
 import { ConfirmModal } from "../ui/ConfirmModal";
 import { TextPromptModal } from "../ui/TextPromptModal";
 import { VaultFolderSuggestModal } from "../ui/VaultFolderSuggestModal";
 
 export class LumaFrameSettingsTab extends PluginSettingTab {
-  private readonly externalFolderService = new ExternalFolderService();
   private readonly sourceService = new SourceService();
   private readonly playlistService = new PlaylistService();
   private readonly profileService = new ProfileService();
@@ -98,7 +95,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
       meta.createEl("strong", { text: source.name });
       meta.createSpan({ text: `${source.type === "vault" ? "Vault" : "External"} · ${source.path}` });
       if (source.type === "external") {
-        meta.createSpan({ text: supportsExternalFolders() ? "Desktop only." : "Available on desktop only." });
+        meta.createSpan({ text: "Unsupported in the community build." });
       }
       new Setting(row)
         .setName("Enabled")
@@ -171,38 +168,6 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
         })
       );
 
-    new Setting(container)
-      .setName("Add External Folder")
-      .setDesc(
-        supportsExternalFolders()
-          ? "Choose a folder from your computer. You can also enter a full folder path manually."
-          : "External folders are not available in the community build. Add a vault folder instead."
-      )
-      .addText((text) => {
-        text.setPlaceholder("/Users/name/Pictures/Favorites");
-        text.inputEl.addClass("lumaframe-external-source-input");
-        text.setDisabled(!supportsExternalFolders());
-      })
-      .addButton((button) =>
-        button
-          .setButtonText("Choose")
-          .setCta()
-          .onClick(async () => {
-            const path = await this.externalFolderService.chooseFolder();
-            if (path) await this.addExternalSource(path);
-          })
-      )
-      .addButton((button) =>
-        button
-          .setButtonText("Add")
-          .setDisabled(!supportsExternalFolders())
-          .onClick(async () => {
-            const input = container.querySelector<HTMLInputElement>(".lumaframe-external-source-input");
-            const path = input?.value.trim();
-            if (!path) return;
-            await this.addExternalSource(path);
-          })
-      );
   }
 
   private renderPlayback(container: HTMLElement): void {
@@ -652,23 +617,6 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
     this.renderSettings();
   }
 
-  private async addExternalSource(path: string): Promise<void> {
-    const normalizedPath = this.normalizeExternalFolderPath(path);
-    if (this.plugin.settings.sources.some((source) => source.type === "external" && this.normalizeExternalFolderPath(source.path) === normalizedPath)) {
-      new Notice("This folder is already a LumaFrame Source.");
-      return;
-    }
-    const source = this.sourceService.createExternalSource(normalizedPath);
-    this.plugin.settings.sources.push(source);
-    for (const profile of this.plugin.settings.profiles) {
-      if (profile.sourceIds.length === 0 || profile.id === this.plugin.settings.defaultProfileId) {
-        profile.sourceIds = [...new Set([...profile.sourceIds, source.id])];
-      }
-    }
-    await this.saveRefresh();
-    this.renderSettings();
-  }
-
   private normalizeVaultFolderPath(path: string): string {
     const cleanPath = path.trim().replace(/\\/g, "/").replace(/^\/+|\/+$/g, "");
     const adapter = this.plugin.app.vault.adapter;
@@ -679,10 +627,6 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
     if (absolutePath === vaultPath) return "";
     if (!absolutePath.startsWith(`${vaultPath}/`)) return cleanPath;
     return absolutePath.slice(vaultPath.length + 1);
-  }
-
-  private normalizeExternalFolderPath(path: string): string {
-    return path.trim().replace(/\\/g, "/").replace(/\/+$/g, "");
   }
 
   private async updateProfileMode(profile: GalleryProfile, value: string): Promise<void> {

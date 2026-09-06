@@ -16,7 +16,7 @@ This folder contains everything needed to install LumaFrame manually in Obsidian
 4. Restart Obsidian.
 5. Open **Settings > Community plugins**.
 6. Enable **LumaFrame**.
-7. Open LumaFrame settings and use **Choose** to add a vault folder as a Source.
+7. Put photos, GIFs or videos in the `LumaFrame Media` folder that LumaFrame creates in your vault.
 
 The final path should look like this:
 

@@ -13,16 +13,6 @@ export class SourceService {
     };
   }
 
-  createExternalSource(path: string): MediaSource {
-    return {
-      id: createId("source"),
-      name: folderName(path),
-      type: "external",
-      path,
-      includeSubfolders: true,
-      enabled: true
-    };
-  }
 }
 
 function folderName(path: string): string {
