@@ -47,11 +47,6 @@ export default class LumaFramePlugin extends Plugin {
     }
   }
 
-  onunload(): void {
-    this.app.workspace.detachLeavesOfType(LUMAFRAME_VIEW_TYPE);
-    this.app.workspace.detachLeavesOfType(LUMAFRAME_GALLERY_VIEW_TYPE);
-  }
-
   async saveSettings(): Promise<void> {
     await this.settingsStore.save(this.settings);
   }
@@ -74,14 +69,12 @@ export default class LumaFramePlugin extends Plugin {
     const existing = this.app.workspace.getLeavesOfType(LUMAFRAME_VIEW_TYPE)[0];
     const leaf = existing ?? this.app.workspace.getLeaf(true);
     await leaf.setViewState({ type: LUMAFRAME_VIEW_TYPE, active: true });
-    this.app.workspace.revealLeaf(leaf);
   }
 
   async openGallery(): Promise<void> {
     const existing = this.app.workspace.getLeavesOfType(LUMAFRAME_GALLERY_VIEW_TYPE)[0];
     const leaf = existing ?? this.app.workspace.getLeaf(true);
     await leaf.setViewState({ type: LUMAFRAME_GALLERY_VIEW_TYPE, active: true });
-    this.app.workspace.revealLeaf(leaf);
   }
 
   currentQueuePosition(): number {
@@ -95,19 +88,19 @@ export default class LumaFramePlugin extends Plugin {
   }
 
   private registerCommands(): void {
-    this.addCommand({ id: "open", name: "LumaFrame: Open", callback: () => void this.openPlayer() });
-    this.addCommand({ id: "open-gallery", name: "LumaFrame: Open Gallery", callback: () => void this.openGallery() });
-    this.addCommand({ id: "play-pause", name: "LumaFrame: Play/Pause", callback: () => this.activePlayer()?.playPause() });
-    this.addCommand({ id: "next", name: "LumaFrame: Next", callback: () => this.activePlayer()?.next() });
-    this.addCommand({ id: "previous", name: "LumaFrame: Previous", callback: () => this.activePlayer()?.previous() });
-    this.addCommand({ id: "toggle-fullscreen", name: "LumaFrame: Toggle Fullscreen", callback: () => new Notice("Press F in LumaFrame to toggle fullscreen.") });
-    this.addCommand({ id: "toggle-mute", name: "LumaFrame: Toggle Mute", callback: () => new Notice("Video sound is controlled in LumaFrame settings.") });
-    this.addCommand({ id: "toggle-info", name: "LumaFrame: Toggle Info", callback: () => this.activePlayer()?.toggleInfo() });
-    this.addCommand({ id: "favorite-current-media", name: "LumaFrame: Favorite Current Media", callback: () => this.activePlayer()?.toggleCurrentFavorite() });
-    this.addCommand({ id: "hide-current-media", name: "LumaFrame: Hide Current Media", callback: () => this.activePlayer()?.hideCurrentMedia() });
-    this.addCommand({ id: "shuffle", name: "LumaFrame: Shuffle", callback: () => this.activePlayer()?.shuffle() });
-    this.addCommand({ id: "open-profile", name: "LumaFrame: Open Profile", callback: () => void this.openPlayer() });
-    this.addCommand({ id: "new-session", name: "LumaFrame: New Session", callback: () => void this.openPlayer() });
+    this.addCommand({ id: "open", name: "Open", callback: () => void this.openPlayer() });
+    this.addCommand({ id: "open-gallery", name: "Open Gallery", callback: () => void this.openGallery() });
+    this.addCommand({ id: "play-pause", name: "Play/Pause", callback: () => this.activePlayer()?.playPause() });
+    this.addCommand({ id: "next", name: "Next", callback: () => this.activePlayer()?.next() });
+    this.addCommand({ id: "previous", name: "Previous", callback: () => this.activePlayer()?.previous() });
+    this.addCommand({ id: "toggle-fullscreen", name: "Toggle Fullscreen", callback: () => new Notice("Press F in LumaFrame to toggle fullscreen.") });
+    this.addCommand({ id: "toggle-mute", name: "Toggle Mute", callback: () => new Notice("Video sound is controlled in LumaFrame settings.") });
+    this.addCommand({ id: "toggle-info", name: "Toggle Info", callback: () => this.activePlayer()?.toggleInfo() });
+    this.addCommand({ id: "favorite-current-media", name: "Favorite Current Media", callback: () => this.activePlayer()?.toggleCurrentFavorite() });
+    this.addCommand({ id: "hide-current-media", name: "Hide Current Media", callback: () => this.activePlayer()?.hideCurrentMedia() });
+    this.addCommand({ id: "shuffle", name: "Shuffle", callback: () => this.activePlayer()?.shuffle() });
+    this.addCommand({ id: "open-profile", name: "Open Profile", callback: () => void this.openPlayer() });
+    this.addCommand({ id: "new-session", name: "New Session", callback: () => void this.openPlayer() });
   }
 
   private registerVaultEvents(): void {

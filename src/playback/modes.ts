@@ -1,7 +1,7 @@
 import type { MediaItem } from "../models/MediaItem";
 import type { MediaStats } from "../models/PluginSettings";
 import { avoidBoundaryRepeat, shuffled } from "../utils/shuffle";
-import { PlaybackModeRegistry, type PlaybackContext, type PlaybackMode } from "./PlaybackModeRegistry";
+import { PlaybackModeRegistry, type PlaybackMode } from "./PlaybackModeRegistry";
 
 function byName(media: MediaItem[]): MediaItem[] {
   return [...media].sort((a, b) => a.name.localeCompare(b.name));

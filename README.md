@@ -2,7 +2,7 @@
 
 **Turn your media into a living gallery.**
 
-LumaFrame is an Obsidian plugin for turning folders of photos, GIFs and videos into a calm digital photo frame, fullscreen gallery and ambient media player.
+LumaFrame turns folders of photos, GIFs and videos into a calm digital photo frame, fullscreen gallery and ambient media player.
 
 The first-run experience is deliberately simple:
 
@@ -145,7 +145,7 @@ Then reload Obsidian.
 2. Add one or more vault folders under Sources.
 3. Choose a Preset.
 4. Choose a Mode.
-5. Run **LumaFrame: Open**.
+5. Run **Open** from the LumaFrame command group.
 
 ## Supported Media
 

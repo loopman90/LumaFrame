@@ -27,7 +27,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
     containerEl.addClass("lumaframe-settings");
-    containerEl.createEl("h1", { text: "LumaFrame" });
+    new Setting(containerEl).setName("LumaFrame").setHeading();
     containerEl.createEl("p", { text: "Turn your media into a living gallery." });
 
     new Setting(containerEl)
@@ -58,7 +58,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
 
   private section(container: HTMLElement, title: string, render: () => void): void {
     if (this.query && !title.toLowerCase().includes(this.query.toLowerCase())) return;
-    container.createEl("h2", { text: title });
+    new Setting(container).setName(title).setHeading();
     render();
   }
 
@@ -144,8 +144,8 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
       .addDropdown((dropdown) => {
         dropdown.addOption("", "Choose folder...");
         folders.forEach((folder) => dropdown.addOption(folder.path, folder.path));
-        dropdown.onChange(async (path) => {
-          if (path) await this.addVaultSource(path);
+        dropdown.onChange((path) => {
+          if (path) void this.addVaultSource(path);
         });
       });
 
@@ -257,7 +257,6 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
         slider
           .setLimits(0, 5000, 100)
           .setValue(preset.transitions.durationMs)
-          .setDynamicTooltip()
           .onChange(async (value) => {
             preset.transitions.durationMs = value;
             await this.plugin.saveSettings();
@@ -305,7 +304,6 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
         slider
           .setLimits(0, 100, 5)
           .setValue(this.plugin.settings.videoVolume)
-          .setDynamicTooltip()
           .onChange(async (value) => {
             this.plugin.settings.videoVolume = value;
             await this.plugin.saveSettings();
@@ -345,7 +343,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
         })
       )
       .addButton((button) =>
-        button.setButtonText("Delete").setWarning().onClick(() => {
+        button.setButtonText("Delete").setDestructive().onClick(() => {
           new ConfirmModal(this.app, "Delete Playlist?", "This only removes the playlist. Original media stays unchanged.", "Delete", async () => {
             this.plugin.settings.playlists = this.plugin.settings.playlists.filter((candidate) => candidate.id !== playlist.id);
             this.plugin.settings.profiles.forEach((profile) => {
@@ -431,7 +429,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
       .addButton((button) =>
         button
           .setButtonText("Delete")
-          .setWarning()
+          .setDestructive()
           .setDisabled(this.plugin.settings.profiles.length <= 1)
           .onClick(() => {
             new ConfirmModal(this.app, "Delete Profile?", "The referenced Sources, Playlists and Presets stay unchanged.", "Delete", async () => {

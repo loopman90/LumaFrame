@@ -55,31 +55,37 @@ export class GalleryGridView extends ItemView {
     const footer = card.createDiv({ cls: "lumaframe-gallery-card-footer" });
     footer.createEl("span", { text: item.name });
     const actions = footer.createDiv({ cls: "lumaframe-gallery-actions" });
-    this.action(actions, this.plugin.settings.favorites[item.id] ? "★" : "☆", "Favorite", async () => {
-      this.plugin.settings.favorites[item.id] = !this.plugin.settings.favorites[item.id];
-      await this.plugin.saveSettings();
-      this.render();
-    });
-    this.action(actions, "▶", "Start playback from item", async () => {
-      await this.plugin.openPlayer();
-      new Notice("Playback opened.");
-    });
+    this.action(actions, this.plugin.settings.favorites[item.id] ? "★" : "☆", "Favorite", () => void this.toggleFavorite(item));
+    this.action(actions, "▶", "Start playback from item", () => void this.startPlayback());
     this.action(actions, "＋", "Add to Playlist", () => this.openPlaylistMenu(actions, item));
-    this.action(actions, "✎", "Create Note", () => this.createMediaNote(item));
+    this.action(actions, "✎", "Create Note", () => void this.createMediaNote(item));
     this.action(actions, "✐", "Rename", () => this.renameVaultFile(item));
     this.action(actions, "↗", "Open in Obsidian", () => this.openInObsidian(item));
-    this.action(actions, "⊘", "Hide from LumaFrame", async () => {
-      this.plugin.settings.hiddenMedia[item.id] = true;
-      await this.plugin.saveSettings();
-      await this.plugin.refreshMedia();
-      this.render();
-    });
+    this.action(actions, "⊘", "Hide from LumaFrame", () => void this.hideMedia(item));
     this.action(actions, "⌫", "Delete original file", () => this.deleteVaultFile(item));
   }
 
   private action(parent: HTMLElement, label: string, title: string, onClick: () => void): void {
     const button = parent.createEl("button", { text: label, attr: { "aria-label": title, title, type: "button" } });
     this.registerDomEvent(button, "click", onClick);
+  }
+
+  private async toggleFavorite(item: MediaItem): Promise<void> {
+    this.plugin.settings.favorites[item.id] = !this.plugin.settings.favorites[item.id];
+    await this.plugin.saveSettings();
+    this.render();
+  }
+
+  private async startPlayback(): Promise<void> {
+    await this.plugin.openPlayer();
+    new Notice("Playback opened.");
+  }
+
+  private async hideMedia(item: MediaItem): Promise<void> {
+    this.plugin.settings.hiddenMedia[item.id] = true;
+    await this.plugin.saveSettings();
+    await this.plugin.refreshMedia();
+    this.render();
   }
 
   private openPlaylistMenu(anchor: HTMLElement, item: MediaItem): void {
@@ -143,7 +149,7 @@ export class GalleryGridView extends ItemView {
     const file = this.app.vault.getAbstractFileByPath(item.path);
     if (!(file instanceof TFile)) return;
     new ConfirmModal(this.app, "Delete photo permanently?", "This removes the original file from disk.", "Delete", async () => {
-      await this.app.vault.trash(file, true);
+      await this.app.fileManager.trashFile(file);
       await this.plugin.refreshMedia();
       this.render();
     }).open();

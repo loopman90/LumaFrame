@@ -25,7 +25,7 @@ export function isSupportedMediaPath(path: string): boolean {
 
 export function canProbablyPlayVideo(extension: string): boolean {
   if (typeof document === "undefined") return VIDEO_EXTENSIONS.has(extension);
-  const video = document.createElement("video");
+  const video = createEl("video");
   const mime = videoMimeForExtension(extension);
   return mime ? video.canPlayType(mime) !== "" : false;
 }

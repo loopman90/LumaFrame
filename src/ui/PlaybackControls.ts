@@ -15,13 +15,13 @@ export class PlaybackControls {
 
   constructor(private readonly handlers: PlaybackControlHandlers) {
     this.element = createDiv({ cls: "lumaframe-controls", attr: { "aria-label": "LumaFrame controls" } });
-    this.createButton("Previous", "←", handlers.onPrevious);
-    this.playButton = this.createButton("Pause", "⏸", handlers.onTogglePlay);
-    this.createButton("Next", "→", handlers.onNext);
-    this.favoriteButton = this.createButton("Favorite", "☆", handlers.onFavorite);
-    this.createButton("Gallery", "▦", handlers.onGallery);
-    this.createButton("Fullscreen", "⛶", handlers.onFullscreen);
-    this.createButton("More", "⋯", handlers.onMore);
+    this.createButton("Previous", "←", () => handlers.onPrevious());
+    this.playButton = this.createButton("Pause", "⏸", () => handlers.onTogglePlay());
+    this.createButton("Next", "→", () => handlers.onNext());
+    this.favoriteButton = this.createButton("Favorite", "☆", () => handlers.onFavorite());
+    this.createButton("Gallery", "▦", () => handlers.onGallery());
+    this.createButton("Fullscreen", "⛶", () => handlers.onFullscreen());
+    this.createButton("More", "⋯", () => handlers.onMore());
   }
 
   setPaused(paused: boolean): void {

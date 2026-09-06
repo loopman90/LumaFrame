@@ -1,7 +1,7 @@
 {
   "name": "lumaframe",
-  "version": "0.1.0",
-  "description": "Turn photos, GIFs and videos into a customizable ambient gallery and digital photo frame inside Obsidian.",
+  "version": "0.1.1",
+  "description": "Turn photos, GIFs and videos into a customizable ambient gallery and digital photo frame.",
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs --watch",
@@ -17,11 +17,10 @@
     "slideshow",
     "photo-frame"
   ],
-  "author": "",
+  "author": "loopman90",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^24.0.0",
-    "builtin-modules": "^5.0.0",
     "esbuild": "^0.25.0",
     "obsidian": "^1.8.7",
     "tslib": "^2.8.0",

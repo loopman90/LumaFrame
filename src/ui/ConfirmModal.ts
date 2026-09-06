@@ -13,14 +13,14 @@ export class ConfirmModal extends Modal {
 
   onOpen(): void {
     this.contentEl.empty();
-    this.contentEl.createEl("h2", { text: this.title });
+    new Setting(this.contentEl).setName(this.title).setHeading();
     this.contentEl.createEl("p", { text: this.body });
     new Setting(this.contentEl)
       .addButton((button) => button.setButtonText("Cancel").onClick(() => this.close()))
       .addButton((button) =>
         button
           .setButtonText(this.confirmText)
-          .setWarning()
+          .setDestructive()
           .onClick(async () => {
             await this.onConfirm();
             this.close();

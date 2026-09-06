@@ -12,9 +12,9 @@ export class ExternalFolderService {
   }
 
   async listFiles(source: MediaSource): Promise<ExternalFileEntry[]> {
-    if (!this.isAvailable()) return [];
-    const fs = await import("fs/promises");
-    const path = await import("path");
+    if (!Platform.isDesktopApp) return [];
+    const fs = require("fs/promises") as typeof import("fs/promises");
+    const path = require("path") as typeof import("path");
     const root = source.path;
     const entries: ExternalFileEntry[] = [];
 
