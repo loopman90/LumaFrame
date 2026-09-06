@@ -2,9 +2,16 @@
 
 All notable changes to LumaFrame are documented here.
 
+## 0.1.16
+
+- Added a Hide Quick UI action inside the Quick UI panel.
+- Added a quick transition duration slider to the player.
+- Removed the macOS-style window decoration from the Quick UI.
+- Saves quick transition timing to the active preset.
+
 ## 0.1.15
 
-- Added a macOS-inspired Quick UI panel to the player.
+- Added a Quick UI panel to the player.
 - Added direct playback mode switching from the player.
 - Added quick access to playback, favorite, gallery, fullscreen and settings controls.
 

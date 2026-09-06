@@ -18,7 +18,7 @@ The first-run experience is deliberately simple:
 - Image, GIF, WebP, AVIF and common video file detection
 - Video playback that advances only after the video ends
 - Muted video by default
-- macOS-inspired Quick UI with mode switching inside the player
+- Quick UI with mode switching, hide controls and transition timing inside the player
 - Player view with Previous, Play/Pause, Next, Favorite, Gallery and Fullscreen
 - Gallery grid with favorites and hide-from-LumaFrame actions
 - Gallery actions for adding media to playlists, creating notes, opening vault media, renaming vault media and confirmed deletion

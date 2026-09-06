@@ -62,7 +62,9 @@ export class LumaFrameView extends ItemView {
       onFavorite: () => this.toggleFavorite(),
       onGallery: () => void this.plugin.openGallery(),
       onFullscreen: () => void this.toggleFullscreen(root),
-      onSettings: () => openPluginSettings(this.app, this.plugin.manifest.id)
+      onSettings: () => openPluginSettings(this.app, this.plugin.manifest.id),
+      onHide: () => this.quickControls.element.addClass("lumaframe-quick-ui-collapsed"),
+      onTransitionDurationChange: (durationMs) => void this.changeTransitionDuration(durationMs)
     });
     root.appendChild(this.quickControls.element);
     this.controls = new PlaybackControls({
@@ -173,6 +175,7 @@ export class LumaFrameView extends ItemView {
       onQueueChanged: async () => this.plugin.saveSettings()
     });
     this.quickControls.setMode(profile.modeId);
+    this.quickControls.setTransitionDuration(preset.transitions.durationMs);
     this.controller.start(media, startMediaId);
     if (this.plugin.settings.autoFullscreen) void this.toggleFullscreen(this.contentEl);
   }
@@ -236,6 +239,14 @@ export class LumaFrameView extends ItemView {
     delete this.plugin.settings.shuffleStates[profile.id];
     await this.plugin.saveSettings();
     await this.startDefaultProfile(this.controller?.current()?.id);
+  }
+
+  private async changeTransitionDuration(durationMs: number): Promise<void> {
+    const profile = this.plugin.defaultProfile();
+    const preset = this.plugin.settings.presets.find((candidate) => candidate.id === profile.presetId);
+    if (!preset) return;
+    preset.transitions.durationMs = Math.max(100, Math.min(3000, Math.round(durationMs / 100) * 100));
+    await this.plugin.saveSettings();
   }
 
   private async toggleFullscreen(root: HTMLElement): Promise<void> {

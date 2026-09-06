@@ -71,19 +71,16 @@
   right: 16px;
   z-index: 6;
   display: grid;
-  grid-template-columns: auto minmax(150px, 220px);
+  grid-template-columns: minmax(140px, 210px) minmax(140px, 190px) auto;
   gap: 10px;
   align-items: center;
-  max-width: min(520px, calc(100% - 32px));
+  max-width: min(720px, calc(100% - 32px));
   padding: 10px;
   color: white;
-  background: linear-gradient(180deg, rgb(42 42 46 / 72%), rgb(18 18 20 / 68%));
-  border: 1px solid rgb(255 255 255 / 18%);
-  border-radius: 12px;
-  box-shadow:
-    0 18px 50px rgb(0 0 0 / 34%),
-    inset 0 1px 0 rgb(255 255 255 / 18%);
-  backdrop-filter: blur(22px) saturate(1.25);
+  background: rgb(12 12 12 / 72%);
+  border: 1px solid rgb(255 255 255 / 12%);
+  border-radius: 8px;
+  backdrop-filter: blur(18px);
 }
 
 .lumaframe-quick-ui-collapsed {
@@ -91,40 +88,15 @@
   pointer-events: none;
 }
 
-.lumaframe-quick-lights {
-  display: flex;
-  gap: 6px;
-  grid-column: 1 / -1;
-  height: 12px;
-  align-items: center;
-}
-
-.lumaframe-quick-light {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  box-shadow: inset 0 -1px 1px rgb(0 0 0 / 24%);
-}
-
-.lumaframe-quick-light-red {
-  background: #ff5f57;
-}
-
-.lumaframe-quick-light-yellow {
-  background: #febc2e;
-}
-
-.lumaframe-quick-light-green {
-  background: #28c840;
-}
-
-.lumaframe-quick-mode {
+.lumaframe-quick-mode,
+.lumaframe-quick-transition {
   display: grid;
   gap: 5px;
   min-width: 0;
 }
 
-.lumaframe-quick-mode span {
+.lumaframe-quick-mode > span,
+.lumaframe-quick-transition > span {
   color: rgb(255 255 255 / 68%);
   font-size: 11px;
   font-weight: 600;
@@ -137,6 +109,26 @@
   background: rgb(255 255 255 / 12%);
   border: 1px solid rgb(255 255 255 / 16%);
   border-radius: 8px;
+}
+
+.lumaframe-quick-transition-row {
+  display: grid;
+  grid-template-columns: minmax(90px, 1fr) 36px;
+  gap: 8px;
+  align-items: center;
+  min-height: 32px;
+}
+
+.lumaframe-quick-transition-row input {
+  width: 100%;
+  accent-color: #8fb7ff;
+}
+
+.lumaframe-quick-transition-row span {
+  color: rgb(255 255 255 / 78%);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
 }
 
 .lumaframe-quick-buttons {
@@ -155,7 +147,6 @@
   border-radius: 8px;
   color: white;
   background: rgb(255 255 255 / 10%);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 14%);
   cursor: pointer;
 }
 
@@ -203,6 +194,7 @@
 .lumaframe-control-button:focus-visible,
 .lumaframe-quick-button:focus-visible,
 .lumaframe-quick-mode select:focus-visible,
+.lumaframe-quick-transition-row input:focus-visible,
 .lumaframe-gallery-actions button:focus-visible {
   outline: 2px solid var(--interactive-accent);
   outline-offset: 2px;
