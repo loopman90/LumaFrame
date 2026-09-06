@@ -27,6 +27,10 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
   }
 
   display(): void {
+    this.renderSettings();
+  }
+
+  private renderSettings(): void {
     const { containerEl } = this;
     containerEl.empty();
     containerEl.addClass("lumaframe-settings");
@@ -40,7 +44,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
           .setValue(this.query)
           .onChange((value) => {
             this.query = value;
-            this.display();
+            this.renderSettings();
           })
       );
 
@@ -72,7 +76,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
         toggle.setValue(this.plugin.settings.simpleSettings).onChange(async (value) => {
           this.plugin.settings.simpleSettings = value;
           await this.plugin.saveSettings();
-          this.display();
+          this.renderSettings();
         })
       );
 
@@ -108,14 +112,14 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
           button.setIcon("arrow-up").setTooltip("Move up").setDisabled(index === 0).onClick(async () => {
             this.move(this.plugin.settings.sources, index, -1);
             await this.saveRefresh();
-            this.display();
+            this.renderSettings();
           })
         )
         .addButton((button) =>
           button.setIcon("arrow-down").setTooltip("Move down").setDisabled(index === this.plugin.settings.sources.length - 1).onClick(async () => {
             this.move(this.plugin.settings.sources, index, 1);
             await this.saveRefresh();
-            this.display();
+            this.renderSettings();
           })
         )
         .addButton((button) =>
@@ -123,7 +127,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
             new TextPromptModal(this.app, "Rename Source", source.name, "Source name", "Rename", async (name) => {
               source.name = name;
               await this.plugin.saveSettings();
-              this.display();
+              this.renderSettings();
             }).open();
           })
         )
@@ -133,7 +137,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
               this.plugin.settings.sources = this.plugin.settings.sources.filter((candidate) => candidate.id !== source.id);
               for (const profile of this.plugin.settings.profiles) profile.sourceIds = profile.sourceIds.filter((id) => id !== source.id);
               await this.saveRefresh();
-              this.display();
+              this.renderSettings();
             }).open();
           })
         );
@@ -172,7 +176,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
             if (!path) return;
             this.plugin.settings.sources.push(this.sourceService.createExternalSource(path));
             await this.saveRefresh();
-            this.display();
+            this.renderSettings();
           })
       );
   }
@@ -193,7 +197,9 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
       .setName("Photo Duration")
       .setDesc("Videos always play their full length.")
       .addDropdown((dropdown) => {
-        [3, 5, 8, 10, 15, 20, 30, 60].forEach((seconds) => dropdown.addOption(String(seconds), `${seconds} seconds`));
+        [3, 5, 8, 10, 15, 20, 30, 60].forEach((seconds) => {
+          dropdown.addOption(String(seconds), `${seconds} seconds`);
+        });
         dropdown.setValue(String(profile.imageDuration)).onChange((value) => {
           void this.updatePhotoDuration(profile, value);
         });
@@ -263,7 +269,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
         button.setButtonText("Restore All").onClick(async () => {
           this.plugin.settings.hiddenMedia = {};
           await this.saveRefresh();
-          this.display();
+          this.renderSettings();
         })
       );
   }
@@ -307,7 +313,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
           new TextPromptModal(this.app, "New Playlist", "Favorites", "Playlist name", "Create", async (name) => {
             this.plugin.settings.playlists.push(this.playlistService.create(name));
             await this.plugin.saveSettings();
-            this.display();
+            this.renderSettings();
           }).open();
         })
       );
@@ -325,7 +331,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
           new TextPromptModal(this.app, "Rename Playlist", playlist.name, "Playlist name", "Rename", async (name) => {
             playlist.name = name;
             await this.plugin.saveSettings();
-            this.display();
+            this.renderSettings();
           }).open();
         })
       )
@@ -337,7 +343,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
               if (profile.playlistId === playlist.id) delete profile.playlistId;
             });
             await this.plugin.saveSettings();
-            this.display();
+            this.renderSettings();
           }).open();
         })
       );
@@ -351,21 +357,21 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
           button.setIcon("arrow-up").setTooltip("Move up").setDisabled(index === 0).onClick(async () => {
             this.playlistService.moveItem(playlist, item.id, -1);
             await this.plugin.saveSettings();
-            this.display();
+            this.renderSettings();
           })
         )
         .addButton((button) =>
           button.setIcon("arrow-down").setTooltip("Move down").setDisabled(index === playlist.items.length - 1).onClick(async () => {
             this.playlistService.moveItem(playlist, item.id, 1);
             await this.plugin.saveSettings();
-            this.display();
+            this.renderSettings();
           })
         )
         .addButton((button) =>
           button.setButtonText("Remove").onClick(async () => {
             this.playlistService.removeMedia(playlist, item.mediaId);
             await this.plugin.saveSettings();
-            this.display();
+            this.renderSettings();
           })
         );
     }
@@ -380,7 +386,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
           new TextPromptModal(this.app, "New Profile", "Family", "Profile name", "Create", async (name) => {
             this.plugin.settings.profiles.push(this.profileService.create(name, this.plugin.settings.sources.map((source) => source.id)));
             await this.plugin.saveSettings();
-            this.display();
+            this.renderSettings();
           }).open();
         })
       );
@@ -401,7 +407,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
           .onClick(async () => {
             this.plugin.settings.defaultProfileId = profile.id;
             await this.plugin.saveSettings();
-            this.display();
+            this.renderSettings();
           })
       )
       .addButton((button) =>
@@ -409,7 +415,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
           new TextPromptModal(this.app, "Rename Profile", profile.name, "Profile name", "Rename", async (name) => {
             profile.name = name;
             await this.plugin.saveSettings();
-            this.display();
+            this.renderSettings();
           }).open();
         })
       )
@@ -423,7 +429,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
               this.plugin.settings.profiles = this.plugin.settings.profiles.filter((candidate) => candidate.id !== profile.id);
               if (this.plugin.settings.defaultProfileId === profile.id) this.plugin.settings.defaultProfileId = this.plugin.settings.profiles[0]!.id;
               await this.plugin.saveSettings();
-              this.display();
+              this.renderSettings();
             }).open();
           })
       );
@@ -544,7 +550,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
           if (!replacement) return;
           Object.assign(active, structuredClone(replacement));
           await this.plugin.saveSettings();
-          this.display();
+          this.renderSettings();
         })
       );
   }
@@ -617,7 +623,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
       }
     }
     await this.saveRefresh();
-    this.display();
+    this.renderSettings();
   }
 
   private async updateProfileMode(profile: GalleryProfile, value: string): Promise<void> {
@@ -646,7 +652,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
       this.plugin.settings.presets.push(copy);
       profile.presetId = copy.id;
       await this.plugin.saveSettings();
-      this.display();
+      this.renderSettings();
     }).open();
   }
 
