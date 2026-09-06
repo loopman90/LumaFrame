@@ -176,7 +176,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
       .setDesc(
         supportsExternalFolders()
           ? "Choose a folder from your computer. You can also enter a full folder path manually."
-          : "External folders are available on desktop. Mobile uses vault folders only."
+          : "External folders are not available in the community build. Add a vault folder instead."
       )
       .addText((text) => {
         text.setPlaceholder("/Users/name/Pictures/Favorites");

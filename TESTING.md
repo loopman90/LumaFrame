@@ -48,8 +48,7 @@ Unsupported media should show a friendly message and playback should continue.
 - Confirm only explicitly added Sources are scanned.
 - Confirm the Source folder selector lists vault folders on desktop and mobile.
 - Confirm no media, filenames, folder names or metadata are uploaded.
-- Confirm the external folder selector works on macOS, Linux and Windows desktop builds.
-- Confirm external folder controls are disabled on mobile.
+- Confirm external folder controls are disabled in the community build.
 
 ## Release Checks
 

@@ -2,6 +2,12 @@
 
 All notable changes to LumaFrame are documented here.
 
+## 0.1.12
+
+- Removed direct external filesystem scanning from the community build.
+- Disabled external folder controls to avoid Obsidian review filesystem warnings.
+- Kept the vault folder selector as the supported cross-platform Source picker.
+
 ## 0.1.11
 
 - Changed desktop filesystem loading to guarded `require()` calls for Obsidian review compatibility.

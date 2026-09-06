@@ -1,7 +1,7 @@
 import { Platform } from "obsidian";
 
 export function supportsExternalFolders(): boolean {
-  return Platform.isDesktop && Platform.isDesktopApp;
+  return false;
 }
 
 export function supportsSecondScreenWindow(): boolean {

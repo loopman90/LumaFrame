@@ -13,7 +13,7 @@ The first-run experience is deliberately simple:
 - Local-first media playback inside Obsidian
 - Explicit vault media Sources
 - Vault folder selector for macOS, Linux, Windows and mobile
-- Desktop external folder selector for explicitly chosen local folders
+- Clear disabled state for external folder Sources in the community build
 - Lightweight media index
 - Image, GIF, WebP, AVIF and common video file detection
 - Video playback that advances only after the video ends
@@ -181,7 +181,7 @@ LumaFrame only scans Sources explicitly added by the user. It never scans the wh
 
 Use **Choose** in the Source settings to pick a folder from inside your current Obsidian vault. You can also enter a vault path manually. If you paste an absolute path that points inside the current vault, LumaFrame converts it to the matching vault path automatically.
 
-Use **Choose** under **Add External Folder** on desktop to select a local folder outside your vault. External folders are available on macOS, Linux and Windows desktop builds. Mobile uses vault Sources only.
+External folders are not scanned in the community build because they require direct filesystem access outside the Obsidian vault API. Move or copy media into your vault, then add that vault folder as a Source.
 
 ## Profiles
 
