@@ -1,0 +1,322 @@
+.lumaframe {
+  --lumaframe-transition-duration: 800ms;
+  color: var(--text-normal);
+}
+
+.lumaframe-player {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+  overflow: hidden;
+  background: #050505;
+  border-radius: 8px;
+}
+
+.lumaframe-media-layer {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.lumaframe-media-item {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transform: translateZ(0);
+  transition:
+    opacity var(--lumaframe-transition-duration) ease,
+    transform var(--lumaframe-transition-duration) ease,
+    filter var(--lumaframe-transition-duration) ease;
+}
+
+.lumaframe-media-active {
+  opacity: 1;
+}
+
+.lumaframe-fit-fit,
+.lumaframe-fit-smart-fit {
+  object-fit: contain;
+}
+
+.lumaframe-fit-fill {
+  object-fit: cover;
+}
+
+.lumaframe-fit-original {
+  object-fit: scale-down;
+}
+
+.lumaframe-fit-width {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.lumaframe-fit-height {
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.lumaframe-controls {
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  z-index: 5;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 8px;
+  background: rgb(12 12 12 / 72%);
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 8px;
+  transform: translateX(-50%);
+  backdrop-filter: blur(18px);
+  transition: opacity 240ms ease;
+}
+
+.lumaframe-controls-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.lumaframe-control-button,
+.lumaframe-gallery-actions button {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid rgb(255 255 255 / 12%);
+  color: white;
+  background: rgb(255 255 255 / 10%);
+  cursor: pointer;
+}
+
+.lumaframe-control-button:focus-visible,
+.lumaframe-gallery-actions button:focus-visible {
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: 2px;
+}
+
+.lumaframe-overlay {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  z-index: 4;
+  color: white;
+  text-shadow: 0 2px 18px rgb(0 0 0 / 60%);
+}
+
+.lumaframe-overlay-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.lumaframe-overlay-meta {
+  color: rgb(255 255 255 / 72%);
+  font-size: 12px;
+}
+
+.lumaframe-empty-state,
+.lumaframe-unsupported {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-content: center;
+  gap: 12px;
+  padding: 32px;
+  text-align: center;
+  color: white;
+}
+
+.lumaframe-gallery {
+  padding: 18px;
+}
+
+.lumaframe-gallery-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.lumaframe-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.lumaframe-gallery-card {
+  overflow: hidden;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  background: var(--background-secondary);
+}
+
+.lumaframe-gallery-thumb {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  background: var(--background-primary-alt);
+}
+
+.lumaframe-gallery-card-footer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  padding: 8px;
+  font-size: 12px;
+}
+
+.lumaframe-gallery-card-footer span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lumaframe-gallery-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.lumaframe-gallery-actions button {
+  width: 28px;
+  height: 28px;
+  color: var(--text-normal);
+  background: var(--background-primary);
+}
+
+.lumaframe-source-row {
+  display: grid;
+  gap: 6px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.lumaframe-source-row span {
+  display: block;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.lumaframe-onboarding {
+  text-align: center;
+}
+
+.lumaframe-preset-choices {
+  margin: 18px 0;
+  color: var(--text-muted);
+}
+
+.lumaframe-transition-out {
+  opacity: 0;
+}
+
+.lumaframe-transition-slide-left {
+  transform: translateX(24px);
+}
+
+.lumaframe-transition-slide-right {
+  transform: translateX(-24px);
+}
+
+.lumaframe-transition-slide-up {
+  transform: translateY(24px);
+}
+
+.lumaframe-transition-slide-down {
+  transform: translateY(-24px);
+}
+
+.lumaframe-transition-push-left,
+.lumaframe-transition-parallax-left {
+  transform: translateX(10%) scale(1.01);
+}
+
+.lumaframe-transition-push-right,
+.lumaframe-transition-parallax-right {
+  transform: translateX(-10%) scale(1.01);
+}
+
+.lumaframe-transition-zoom-in,
+.lumaframe-transition-ken-burns-in,
+.lumaframe-transition-soft-zoom {
+  transform: scale(1.035);
+}
+
+.lumaframe-transition-zoom-out,
+.lumaframe-transition-ken-burns-out {
+  transform: scale(0.965);
+}
+
+.lumaframe-transition-blur-in,
+.lumaframe-transition-blur-crossfade,
+.lumaframe-transition-dream-blur {
+  filter: blur(14px);
+}
+
+.lumaframe-transition-scale-fade,
+.lumaframe-transition-floating-frame {
+  transform: scale(0.94);
+}
+
+.lumaframe-transition-film-dissolve,
+.lumaframe-transition-dissolve {
+  filter: contrast(1.08) saturate(1.06);
+}
+
+.lumaframe-transition-light-sweep,
+.lumaframe-transition-soft-flash {
+  filter: brightness(1.2);
+}
+
+.lumaframe-transition-iris-reveal {
+  transform: scale(0.9);
+  filter: brightness(0.96);
+}
+
+.lumaframe-transition-mask-reveal,
+.lumaframe-transition-horizontal-wipe {
+  transform: scaleX(0.92);
+}
+
+.lumaframe-transition-vertical-wipe {
+  transform: scaleY(0.92);
+}
+
+.lumaframe-transition-split-reveal {
+  transform: scale(0.98);
+}
+
+.lumaframe-transition-depth-push,
+.lumaframe-transition-perspective-shift {
+  transform: perspective(900px) rotateY(4deg) scale(1.02);
+}
+
+.lumaframe-transition-gentle-drift,
+.lumaframe-transition-ambient-float {
+  transform: translate3d(12px, -8px, 0) scale(1.01);
+}
+
+.lumaframe-transition-cinematic-reveal {
+  transform: scale(1.025) translateY(10px);
+  filter: brightness(0.92);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lumaframe-media-item {
+    transition-duration: 180ms;
+  }
+}
