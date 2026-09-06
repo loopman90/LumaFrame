@@ -12,7 +12,7 @@ The first-run experience is deliberately simple:
 
 - Local-first media playback inside Obsidian
 - Explicit vault media Sources
-- Desktop-ready external folder Sources
+- Desktop external folder Sources are saved for future support without broad filesystem scanning in the community build
 - Lightweight media index
 - Image, GIF, WebP, AVIF and common video file detection
 - Video playback that advances only after the video ends
@@ -222,7 +222,7 @@ The architecture separates Sessions from Profiles so independent windows and mon
 
 ## Mobile Support
 
-Core vault Sources, image playback, GIFs, supported videos, presets, profiles and gallery views are designed to work without desktop-only APIs. External folders, native file watching, kiosk and second-screen features are desktop-oriented.
+Core vault Sources, image playback, GIFs, supported videos, presets, profiles and gallery views are designed to work without desktop-only APIs. External folder scanning, native file watching, kiosk and second-screen features are desktop-oriented future work.
 
 ## Privacy
 

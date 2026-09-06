@@ -35,6 +35,18 @@ jobs:
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
         with:
+          body: |
+            LumaFrame release built from the tagged source.
+
+            Includes the required plugin assets:
+            - main.js
+            - manifest.json
+            - styles.css
+
+            Validation:
+            - Build passed.
+            - Tests passed.
+            - GitHub artifact attestations are generated for main.js and styles.css.
           files: |
             main.js
             manifest.json

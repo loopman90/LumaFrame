@@ -109,9 +109,9 @@ Mobile-safe:
 - Profiles
 - Playlists
 
-Desktop-oriented:
+Desktop-oriented future work:
 
-- External folder scanning
+- External folder scanning through an approved adapter
 - Native file watchers
 - Separate windows
 - Multi-monitor behavior

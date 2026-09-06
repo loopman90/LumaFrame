@@ -20,7 +20,7 @@ export class ConfirmModal extends Modal {
       .addButton((button) =>
         button
           .setButtonText(this.confirmText)
-          .setWarning()
+          .then((component) => component.buttonEl.addClass("mod-warning"))
           .onClick(async () => {
             await this.onConfirm();
             this.close();

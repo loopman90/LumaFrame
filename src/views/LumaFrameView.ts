@@ -46,9 +46,9 @@ export class LumaFrameView extends ItemView {
   async onOpen(): Promise<void> {
     this.transitionManager = new TransitionManager(this.plugin.transitions);
     this.containerEl.addClass("lumaframe-container");
-    const root = this.contentEl.createDiv({ cls: "lumaframe lumaframe-player" });
-    this.mediaLayer = root.createDiv({ cls: "lumaframe-media-layer" });
-    this.emptyState = root.createDiv({ cls: "lumaframe-empty-state" });
+    const root = this.contentEl.createEl("div", { cls: "lumaframe lumaframe-player" });
+    this.mediaLayer = root.createEl("div", { cls: "lumaframe-media-layer" });
+    this.emptyState = root.createEl("div", { cls: "lumaframe-empty-state" });
     this.overlay = new MediaOverlay();
     root.appendChild(this.overlay.element);
     this.controls = new PlaybackControls({

@@ -43,7 +43,7 @@ export class OnboardingWizard extends Modal {
 
   private renderLook(): void {
     this.contentEl.createEl("h2", { text: "Choose a Look" });
-    this.contentEl.createDiv({ cls: "lumaframe-preset-choices", text: "Classic · Ambient · Cinematic · Gallery · Minimal" });
+    this.contentEl.createEl("div", { cls: "lumaframe-preset-choices", text: "Classic · Ambient · Cinematic · Gallery · Minimal" });
     this.nextButton();
   }
 

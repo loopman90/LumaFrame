@@ -1,4 +1,4 @@
-import { App, TFile } from "obsidian";
+import { App, TAbstractFile, TFile, TFolder } from "obsidian";
 import type { MediaItem } from "../models/MediaItem";
 import type { MediaSource } from "../models/MediaSource";
 import type { LumaFrameSettings } from "../models/PluginSettings";
@@ -22,9 +22,12 @@ export class MediaScanner {
 
   private scanVaultSource(source: MediaSource): MediaItem[] {
     const normalizedSourcePath = trimSlashes(source.path);
-    return this.app.vault
-      .getFiles()
-      .filter((file) => belongsToSource(file, normalizedSourcePath, source.includeSubfolders))
+    const folder = this.app.vault.getAbstractFileByPath(normalizedSourcePath);
+    if (!(folder instanceof TFolder)) {
+      source.unavailable = true;
+      return [];
+    }
+    return filesInFolder(folder, source.includeSubfolders)
       .map((file) => fileToMediaItem(file, source))
       .filter((item): item is MediaItem => item !== null);
   }
@@ -52,14 +55,22 @@ export class MediaScanner {
   }
 }
 
-function belongsToSource(file: TFile, sourcePath: string, includeSubfolders: boolean): boolean {
-  if (sourcePath === "") return false;
-  const normalizedFilePath = trimSlashes(file.path);
-  if (includeSubfolders) {
-    return normalizedFilePath === sourcePath || normalizedFilePath.startsWith(`${sourcePath}/`);
+function filesInFolder(folder: TFolder, includeSubfolders: boolean): TFile[] {
+  const files: TFile[] = [];
+  for (const child of folder.children) {
+    collectFile(child, includeSubfolders, files);
   }
-  const parent = normalizedFilePath.split("/").slice(0, -1).join("/");
-  return parent === sourcePath;
+  return files;
+}
+
+function collectFile(file: TAbstractFile, includeSubfolders: boolean, files: TFile[]): void {
+  if (file instanceof TFile) {
+    files.push(file);
+    return;
+  }
+  if (includeSubfolders && file instanceof TFolder) {
+    for (const child of file.children) collectFile(child, includeSubfolders, files);
+  }
 }
 
 function fileToMediaItem(file: TFile, source: MediaSource): MediaItem | null {

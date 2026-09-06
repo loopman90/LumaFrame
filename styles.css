@@ -31,8 +31,7 @@
   transition:
     opacity var(--lumaframe-transition-duration) ease,
     transform var(--lumaframe-transition-duration) ease,
-    filter var(--lumaframe-transition-duration) ease,
-    clip-path var(--lumaframe-transition-duration) ease;
+    filter var(--lumaframe-transition-duration) ease;
 }
 
 .lumaframe-media-active {
@@ -284,20 +283,20 @@
 }
 
 .lumaframe-transition-iris-reveal {
-  clip-path: circle(38% at center);
+  transform: scale(0.9);
+  filter: brightness(0.96);
 }
 
 .lumaframe-transition-mask-reveal,
 .lumaframe-transition-horizontal-wipe {
-  clip-path: inset(0 24% 0 24%);
+  transform: scaleX(0.92);
 }
 
 .lumaframe-transition-vertical-wipe {
-  clip-path: inset(24% 0 24% 0);
+  transform: scaleY(0.92);
 }
 
 .lumaframe-transition-split-reveal {
-  clip-path: inset(0 0 0 0 round 16px);
   transform: scale(0.98);
 }
 

@@ -10,7 +10,6 @@ import { SourceService } from "../services/SourceService";
 import { supportsExternalFolders } from "../utils/platform";
 import { ConfirmModal } from "../ui/ConfirmModal";
 import { TextPromptModal } from "../ui/TextPromptModal";
-import { VaultFolderSuggest } from "../ui/VaultFolderSuggest";
 
 export class LumaFrameSettingsTab extends PluginSettingTab {
   private readonly sourceService = new SourceService();
@@ -81,12 +80,12 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
 
   private renderSources(container: HTMLElement): void {
     container.createEl("p", { text: "LumaFrame only scans folders you add here." });
-    const list = container.createDiv({ cls: "lumaframe-source-list" });
+    const list = container.createEl("div", { cls: "lumaframe-source-list" });
     for (const [index, source] of this.plugin.settings.sources.entries()) {
-      const row = list.createDiv({ cls: "lumaframe-source-row" });
-      const meta = row.createDiv();
+      const row = list.createEl("div", { cls: "lumaframe-source-row" });
+      const meta = row.createEl("div");
       meta.createEl("strong", { text: source.name });
-      meta.createEl("span", { text: `${source.type === "vault" ? "Vault" : "External"} · ${source.path}` });
+      meta.createSpan({ text: `${source.type === "vault" ? "Vault" : "External"} · ${source.path}` });
       new Setting(row)
         .setName("Enabled")
         .addToggle((toggle) =>
@@ -136,25 +135,12 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
         );
     }
 
-    const folders = this.app.vault.getAllLoadedFiles().filter((file): file is TFolder => file instanceof TFolder && file.path !== "/");
     new Setting(container)
       .setName("Add Vault Folder")
-      .setDesc("Choose a folder from this vault.")
-      .addDropdown((dropdown) => {
-        dropdown.addOption("", "Choose folder...");
-        folders.forEach((folder) => dropdown.addOption(folder.path, folder.path));
-        dropdown.onChange((path) => {
-          if (path) void this.addVaultSource(path);
-        });
-      });
-
-    new Setting(container)
-      .setName("Add Vault Folder by Path")
-      .setDesc("Useful for new or deeply nested folders.")
+      .setDesc("Enter a folder path from this vault, for example Photos/Family.")
       .addText((text) => {
         text.setPlaceholder("Photos/Family");
         text.inputEl.addClass("lumaframe-source-input");
-        new VaultFolderSuggest(this.app, text.inputEl);
       })
       .addButton((button) =>
         button.setButtonText("Add").onClick(async () => {
@@ -328,9 +314,9 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
   }
 
   private renderPlaylist(container: HTMLElement, playlist: Playlist): void {
-    const row = container.createDiv({ cls: "lumaframe-manager-row" });
+    const row = container.createEl("div", { cls: "lumaframe-manager-row" });
     row.createEl("strong", { text: playlist.name });
-    row.createEl("span", { text: `${playlist.items.length} items` });
+    row.createSpan({ text: `${playlist.items.length} items` });
     new Setting(row)
       .addButton((button) =>
         button.setButtonText("Rename").onClick(() => {
@@ -342,7 +328,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
         })
       )
       .addButton((button) =>
-        button.setButtonText("Delete").setWarning().onClick(() => {
+        button.setButtonText("Delete").then((component) => component.buttonEl.addClass("mod-warning")).onClick(() => {
           new ConfirmModal(this.app, "Delete Playlist?", "This only removes the playlist. Original media stays unchanged.", "Delete", async () => {
             this.plugin.settings.playlists = this.plugin.settings.playlists.filter((candidate) => candidate.id !== playlist.id);
             this.plugin.settings.profiles.forEach((profile) => {
@@ -401,9 +387,9 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
   }
 
   private renderProfile(container: HTMLElement, profile: GalleryProfile): void {
-    const row = container.createDiv({ cls: "lumaframe-manager-row" });
+    const row = container.createEl("div", { cls: "lumaframe-manager-row" });
     row.createEl("strong", { text: profile.name });
-    row.createEl("span", { text: `${profile.sourceIds.length || this.plugin.settings.sources.length} Sources · ${profile.modeId}` });
+    row.createSpan({ text: `${profile.sourceIds.length || this.plugin.settings.sources.length} Sources · ${profile.modeId}` });
     new Setting(row)
       .addButton((button) =>
         button
@@ -428,7 +414,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
       .addButton((button) =>
         button
           .setButtonText("Delete")
-          .setWarning()
+          .then((component) => component.buttonEl.addClass("mod-warning"))
           .setDisabled(this.plugin.settings.profiles.length <= 1)
           .onClick(() => {
             new ConfirmModal(this.app, "Delete Profile?", "The referenced Sources, Playlists and Presets stay unchanged.", "Delete", async () => {

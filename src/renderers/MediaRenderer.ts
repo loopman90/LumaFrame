@@ -62,9 +62,9 @@ export class MediaRenderer {
   }
 
   private renderUnsupported(message: string): HTMLElement {
-    const wrapper = createDiv({ cls: "lumaframe-unsupported" });
+    const wrapper = createEl("div", { cls: "lumaframe-unsupported" });
     wrapper.createEl("strong", { text: message });
-    wrapper.createEl("span", { text: "LumaFrame will automatically continue." });
+    wrapper.createSpan({ text: "LumaFrame will automatically continue." });
     return wrapper;
   }
 
