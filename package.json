@@ -1,6 +1,6 @@
 {
   "name": "lumaframe",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Turn photos, GIFs and videos into a customizable ambient gallery and digital photo frame.",
   "main": "main.js",
   "scripts": {

@@ -1,4 +1,4 @@
-import { Notice, PluginSettingTab, Setting, TFolder } from "obsidian";
+import { Notice, PluginSettingTab, Setting, TFolder, type SettingDefinitionItem } from "obsidian";
 import type LumaFramePlugin from "../main";
 import type { BackgroundMode, FitMode, GalleryPreset, KenBurnsMode } from "../models/GalleryPreset";
 import type { GalleryProfile } from "../models/GalleryProfile";
@@ -20,6 +20,10 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
 
   constructor(private readonly plugin: LumaFramePlugin) {
     super(plugin.app, plugin);
+  }
+
+  getSettingDefinitions(): SettingDefinitionItem[] {
+    return [];
   }
 
   display(): void {
@@ -80,10 +84,10 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
 
   private renderSources(container: HTMLElement): void {
     container.createEl("p", { text: "LumaFrame only scans folders you add here." });
-    const list = container.createEl("div", { cls: "lumaframe-source-list" });
+    const list = container.createDiv({ cls: "lumaframe-source-list" });
     for (const [index, source] of this.plugin.settings.sources.entries()) {
-      const row = list.createEl("div", { cls: "lumaframe-source-row" });
-      const meta = row.createEl("div");
+      const row = list.createDiv({ cls: "lumaframe-source-row" });
+      const meta = row.createDiv();
       meta.createEl("strong", { text: source.name });
       meta.createSpan({ text: `${source.type === "vault" ? "Vault" : "External"} · ${source.path}` });
       new Setting(row)
@@ -180,9 +184,8 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
       .setDesc("How LumaFrame chooses the next item.")
       .addDropdown((dropdown) => {
         for (const mode of this.plugin.playbackModes.all()) dropdown.addOption(mode.id, mode.name);
-        dropdown.setValue(profile.modeId).onChange(async (value) => {
-          profile.modeId = value as typeof profile.modeId;
-          await this.plugin.saveSettings();
+        dropdown.setValue(profile.modeId).onChange((value) => {
+          void this.updateProfileMode(profile, value);
         });
       });
 
@@ -191,9 +194,8 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
       .setDesc("Videos always play their full length.")
       .addDropdown((dropdown) => {
         [3, 5, 8, 10, 15, 20, 30, 60].forEach((seconds) => dropdown.addOption(String(seconds), `${seconds} seconds`));
-        dropdown.setValue(String(profile.imageDuration)).onChange(async (value) => {
-          profile.imageDuration = Number(value);
-          await this.plugin.saveSettings();
+        dropdown.setValue(String(profile.imageDuration)).onChange((value) => {
+          void this.updatePhotoDuration(profile, value);
         });
       });
 
@@ -314,7 +316,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
   }
 
   private renderPlaylist(container: HTMLElement, playlist: Playlist): void {
-    const row = container.createEl("div", { cls: "lumaframe-manager-row" });
+    const row = container.createDiv({ cls: "lumaframe-manager-row" });
     row.createEl("strong", { text: playlist.name });
     row.createSpan({ text: `${playlist.items.length} items` });
     new Setting(row)
@@ -387,7 +389,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
   }
 
   private renderProfile(container: HTMLElement, profile: GalleryProfile): void {
-    const row = container.createEl("div", { cls: "lumaframe-manager-row" });
+    const row = container.createDiv({ cls: "lumaframe-manager-row" });
     row.createEl("strong", { text: profile.name });
     row.createSpan({ text: `${profile.sourceIds.length || this.plugin.settings.sources.length} Sources · ${profile.modeId}` });
     new Setting(row)
@@ -616,6 +618,16 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
     }
     await this.saveRefresh();
     this.display();
+  }
+
+  private async updateProfileMode(profile: GalleryProfile, value: string): Promise<void> {
+    profile.modeId = value as typeof profile.modeId;
+    await this.plugin.saveSettings();
+  }
+
+  private async updatePhotoDuration(profile: GalleryProfile, value: string): Promise<void> {
+    profile.imageDuration = Number(value);
+    await this.plugin.saveSettings();
   }
 
   private defaultPreset(): GalleryPreset {

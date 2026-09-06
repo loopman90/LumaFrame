@@ -33,18 +33,18 @@ export class GalleryGridView extends ItemView {
 
   render(): void {
     this.contentEl.empty();
-    const root = this.contentEl.createEl("div", { cls: "lumaframe lumaframe-gallery" });
-    const header = root.createEl("div", { cls: "lumaframe-gallery-header" });
+    const root = this.contentEl.createDiv({ cls: "lumaframe lumaframe-gallery" });
+    const header = root.createDiv({ cls: "lumaframe-gallery-header" });
     header.createEl("h2", { text: "LumaFrame Gallery" });
     header.createSpan({ text: `${this.plugin.mediaLibrary.index.visible().length} media files` });
-    const grid = root.createEl("div", { cls: "lumaframe-gallery-grid" });
+    const grid = root.createDiv({ cls: "lumaframe-gallery-grid" });
     for (const item of this.plugin.mediaLibrary.index.visible()) {
       this.renderItem(grid, item);
     }
   }
 
   private renderItem(grid: HTMLElement, item: MediaItem): void {
-    const card = grid.createEl("div", { cls: "lumaframe-gallery-card" });
+    const card = grid.createDiv({ cls: "lumaframe-gallery-card" });
     const file = this.app.vault.getAbstractFileByPath(item.path);
     const url = file instanceof TFile ? this.app.vault.getResourcePath(file) : item.path;
     if (item.type === "video") {
@@ -52,9 +52,9 @@ export class GalleryGridView extends ItemView {
     } else {
       card.createEl("img", { cls: "lumaframe-gallery-thumb", attr: { src: url, alt: item.name, loading: "lazy" } });
     }
-    const footer = card.createEl("div", { cls: "lumaframe-gallery-card-footer" });
+    const footer = card.createDiv({ cls: "lumaframe-gallery-card-footer" });
     footer.createSpan({ text: item.name });
-    const actions = footer.createEl("div", { cls: "lumaframe-gallery-actions" });
+    const actions = footer.createDiv({ cls: "lumaframe-gallery-actions" });
     this.action(actions, this.plugin.settings.favorites[item.id] ? "★" : "☆", "Favorite", () => void this.toggleFavorite(item));
     this.action(actions, "▶", "Start playback from item", () => void this.startPlayback());
     this.action(actions, "＋", "Add to Playlist", () => this.openPlaylistMenu(actions, item));
