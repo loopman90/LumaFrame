@@ -135,6 +135,7 @@ When changing persisted shape:
 - Use Vault APIs for vault file operations.
 - Use lifecycle helpers such as `registerEvent` and `registerDomEvent`.
 - Keep styles namespaced under `.lumaframe`.
+- Keep all user-facing UI, command names, settings, notices and documentation in English.
 - Do not add telemetry, external APIs, account systems or cloud processing.
 - Do not permanently delete original media without confirmation.
 - Add file/folder integration through Obsidian context menus when it keeps the UI calmer.

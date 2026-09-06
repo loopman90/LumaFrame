@@ -230,6 +230,10 @@ LumaFrame is completely local.
 
 It does not implement analytics, telemetry, cloud processing, AI, external APIs, accounts, tracking or remote databases. It does not upload media, filenames, folder names, metadata or usage data.
 
+## Language
+
+LumaFrame's plugin interface, documentation, settings, commands and user-facing messages are written in English.
+
 ## Troubleshooting
 
 If no media appears, check that at least one Source is enabled and that the folder path is correct.
