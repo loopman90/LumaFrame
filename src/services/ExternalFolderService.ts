@@ -4,7 +4,7 @@ import { mediaKindForPath } from "../utils/mediaTypes";
 
 export class ExternalFolderService {
   isAvailable(): boolean {
-    return Platform.isDesktopApp;
+    return Platform.isDesktop && Platform.isDesktopApp;
   }
 
   async chooseFolder(): Promise<string | null> {
@@ -27,7 +27,7 @@ export class ExternalFolderService {
   }
 
   async listFiles(source: MediaSource): Promise<ExternalFileEntry[]> {
-    if (!this.isAvailable()) {
+    if (!Platform.isDesktop || !Platform.isDesktopApp) {
       source.unavailable = true;
       return [];
     }
@@ -72,8 +72,21 @@ interface ElectronLike {
   };
 }
 
-type FsPromises = typeof import("fs/promises");
-type PathModule = typeof import("path");
+interface FsPromises {
+  readdir(path: string, options: { withFileTypes: true }): Promise<DirentLike[]>;
+  stat(path: string): Promise<{ mtimeMs: number; ctimeMs: number }>;
+}
+
+interface DirentLike {
+  name: string;
+  isDirectory(): boolean;
+  isFile(): boolean;
+}
+
+interface PathModule {
+  join(...paths: string[]): string;
+  resolve(path: string): string;
+}
 
 async function collectMediaFiles(
   fs: FsPromises,

@@ -2,6 +2,11 @@
 
 All notable changes to LumaFrame are documented here.
 
+## 0.1.10
+
+- Made the external folder filesystem guard explicit for Obsidian review scanning.
+- Kept external folder support desktop-only.
+
 ## 0.1.9
 
 - Added a desktop external folder picker for Sources.
