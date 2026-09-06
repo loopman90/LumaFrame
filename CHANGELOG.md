@@ -2,6 +2,11 @@
 
 All notable changes to LumaFrame are documented here.
 
+## 0.1.13
+
+- Kept the External Folder Choose button visible in the community build.
+- Shows clear guidance when external folders are unavailable.
+
 ## 0.1.12
 
 - Removed direct external filesystem scanning from the community build.

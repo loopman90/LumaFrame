@@ -187,7 +187,6 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
         button
           .setButtonText("Choose")
           .setCta()
-          .setDisabled(!supportsExternalFolders())
           .onClick(async () => {
             const path = await this.externalFolderService.chooseFolder();
             if (path) await this.addExternalSource(path);
