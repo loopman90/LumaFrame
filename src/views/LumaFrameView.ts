@@ -5,11 +5,13 @@ import type { GalleryProfile } from "../models/GalleryProfile";
 import type { GallerySession } from "../models/GallerySession";
 import type { MediaItem } from "../models/MediaItem";
 import { PlaybackController } from "../playback/PlaybackController";
+import type { PlaybackModeId } from "../playback/PlaybackModeRegistry";
 import { MediaRenderer } from "../renderers/MediaRenderer";
 import { TransitionManager } from "../transitions/TransitionManager";
 import { createId } from "../utils/id";
 import { MediaOverlay } from "../ui/MediaOverlay";
 import { PlaybackControls } from "../ui/PlaybackControls";
+import { QuickControls } from "../ui/QuickControls";
 import { openPluginSettings } from "../utils/obsidianSettings";
 
 export const LUMAFRAME_VIEW_TYPE = "lumaframe-player";
@@ -18,6 +20,7 @@ export class LumaFrameView extends ItemView {
   private mediaLayer!: HTMLElement;
   private emptyState!: HTMLElement;
   private controls!: PlaybackControls;
+  private quickControls!: QuickControls;
   private overlay!: MediaOverlay;
   private controller: PlaybackController | null = null;
   private transitionManager!: TransitionManager;
@@ -51,6 +54,17 @@ export class LumaFrameView extends ItemView {
     this.emptyState = root.createDiv({ cls: "lumaframe-empty-state" });
     this.overlay = new MediaOverlay();
     root.appendChild(this.overlay.element);
+    this.quickControls = new QuickControls(this.plugin.playbackModes.all(), {
+      onModeChange: (modeId) => void this.changeMode(modeId),
+      onPrevious: () => this.controller?.previous(),
+      onTogglePlay: () => this.controller?.togglePaused(),
+      onNext: () => this.controller?.next(),
+      onFavorite: () => this.toggleFavorite(),
+      onGallery: () => void this.plugin.openGallery(),
+      onFullscreen: () => void this.toggleFullscreen(root),
+      onSettings: () => openPluginSettings(this.app, this.plugin.manifest.id)
+    });
+    root.appendChild(this.quickControls.element);
     this.controls = new PlaybackControls({
       onPrevious: () => this.controller?.previous(),
       onTogglePlay: () => this.controller?.togglePaused(),
@@ -58,7 +72,7 @@ export class LumaFrameView extends ItemView {
       onFavorite: () => this.toggleFavorite(),
       onGallery: () => void this.plugin.openGallery(),
       onFullscreen: () => void this.toggleFullscreen(root),
-      onMore: () => new Notice("More controls will appear as LumaFrame grows.")
+      onMore: () => this.quickControls.element.toggleClass("lumaframe-quick-ui-collapsed", !this.quickControls.element.hasClass("lumaframe-quick-ui-collapsed"))
     });
     root.appendChild(this.controls.element);
     this.registerDomEvent(root, "mousemove", () => this.showControlsBriefly());
@@ -151,10 +165,14 @@ export class LumaFrameView extends ItemView {
     this.controller?.stop();
     this.controller = new PlaybackController(session, this.plugin.settings, profile, preset, this.plugin.playbackModes, {
       onMediaChanged: (item) => void this.renderMedia(item, preset),
-      onPausedChanged: (paused) => this.controls.setPaused(paused),
+      onPausedChanged: (paused) => {
+        this.controls.setPaused(paused);
+        this.quickControls.setPaused(paused);
+      },
       onStatsChanged: async () => this.plugin.saveSettings(),
       onQueueChanged: async () => this.plugin.saveSettings()
     });
+    this.quickControls.setMode(profile.modeId);
     this.controller.start(media, startMediaId);
     if (this.plugin.settings.autoFullscreen) void this.toggleFullscreen(this.contentEl);
   }
@@ -172,6 +190,7 @@ export class LumaFrameView extends ItemView {
     this.currentElement = rendered.element;
     this.controller.attachVideo(rendered.video ?? null);
     this.controls.setFavorite(Boolean(this.plugin.settings.favorites[item.id]));
+    this.quickControls.setFavorite(Boolean(this.plugin.settings.favorites[item.id]));
     this.overlay.update(item, this.plugin.currentQueuePosition(), this.plugin.currentMediaCount(), preset.overlays.showInfo);
     if (!rendered.playable) window.setTimeout(() => this.controller?.next(), 1500);
   }
@@ -205,7 +224,18 @@ export class LumaFrameView extends ItemView {
     const favorite = !this.plugin.settings.favorites[item.id];
     this.plugin.settings.favorites[item.id] = favorite;
     this.controls.setFavorite(favorite);
+    this.quickControls.setFavorite(favorite);
     void this.plugin.saveSettings();
+  }
+
+  private async changeMode(modeId: string): Promise<void> {
+    const profile = this.plugin.defaultProfile();
+    const nextModeId = modeId as PlaybackModeId;
+    if (!this.plugin.playbackModes.get(nextModeId) || profile.modeId === nextModeId) return;
+    profile.modeId = nextModeId;
+    delete this.plugin.settings.shuffleStates[profile.id];
+    await this.plugin.saveSettings();
+    await this.startDefaultProfile(this.controller?.current()?.id);
   }
 
   private async toggleFullscreen(root: HTMLElement): Promise<void> {

@@ -2,6 +2,12 @@
 
 All notable changes to LumaFrame are documented here.
 
+## 0.1.15
+
+- Added a macOS-inspired Quick UI panel to the player.
+- Added direct playback mode switching from the player.
+- Added quick access to playback, favorite, gallery, fullscreen and settings controls.
+
 ## 0.1.14
 
 - Removed the Add External Folder control from the community build.

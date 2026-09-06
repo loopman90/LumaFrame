@@ -24,12 +24,13 @@ All three commands should pass before tagging a release.
 8. Open the LumaFrame player.
 9. Confirm an image appears.
 10. Test Play/Pause, Next and Previous.
-11. Open the Gallery.
-12. Favorite an item.
-13. Hide an item and confirm it disappears from playback.
-14. Create a playlist and add a gallery item to it.
-15. Start playback from a specific gallery item.
-16. Create a media note for a vault item.
+11. Switch playback mode from the Quick UI.
+12. Open the Gallery.
+13. Favorite an item.
+14. Hide an item and confirm it disappears from playback.
+15. Create a playlist and add a gallery item to it.
+16. Start playback from a specific gallery item.
+17. Create a media note for a vault item.
 
 ## Media Checks
 
