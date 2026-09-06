@@ -9,6 +9,7 @@ export interface PlaybackEvents {
   onMediaChanged(item: MediaItem | undefined): void;
   onPausedChanged(paused: boolean): void;
   onStatsChanged(settings: LumaFrameSettings): Promise<void>;
+  onQueueChanged(settings: LumaFrameSettings): Promise<void>;
 }
 
 export class PlaybackController {
@@ -28,7 +29,13 @@ export class PlaybackController {
   start(media: MediaItem[]): void {
     this.media = media;
     this.session.paused = this.profile.startPaused;
-    this.rebuildQueue();
+    if (this.profile.rememberShuffle && this.settings.shuffleStates[this.profile.id]?.queue.length) {
+      const saved = this.settings.shuffleStates[this.profile.id]!;
+      const available = new Set(media.map((item) => item.id));
+      this.session.queue = saved.queue.filter((id) => available.has(id));
+      this.session.queuePosition = Math.min(saved.queuePosition, Math.max(this.session.queue.length - 1, 0));
+    }
+    if (this.session.queue.length === 0) this.rebuildQueue();
     this.goTo(this.session.queuePosition);
     this.events.onPausedChanged(this.session.paused);
   }
@@ -71,6 +78,17 @@ export class PlaybackController {
     return id ? this.media.find((item) => item.id === id) : undefined;
   }
 
+  hideCurrent(): MediaItem | undefined {
+    const item = this.current();
+    if (!item) return undefined;
+    this.settings.hiddenMedia[item.id] = true;
+    this.session.queue = this.session.queue.filter((id) => id !== item.id);
+    if (this.session.queuePosition >= this.session.queue.length) this.session.queuePosition = 0;
+    this.persistQueue();
+    this.goTo(this.session.queuePosition);
+    return item;
+  }
+
   position(): number {
     return this.session.queuePosition;
   }
@@ -98,6 +116,7 @@ export class PlaybackController {
     }
     if (position < 0) position = this.session.queue.length - 1;
     this.session.queuePosition = position;
+    this.persistQueue();
     const item = this.current();
     this.markShown(item);
     this.events.onMediaChanged(item);
@@ -113,6 +132,7 @@ export class PlaybackController {
     });
     this.session.queue = queue.map((item) => item.id);
     this.session.queuePosition = 0;
+    this.persistQueue();
   }
 
   private schedule(): void {
@@ -143,5 +163,15 @@ export class PlaybackController {
       lastShown: Date.now()
     };
     void this.events.onStatsChanged(this.settings);
+  }
+
+  private persistQueue(): void {
+    if (!this.profile.rememberShuffle) return;
+    this.settings.shuffleStates[this.profile.id] = {
+      queue: [...this.session.queue],
+      queuePosition: this.session.queuePosition,
+      updatedAt: Date.now()
+    };
+    void this.events.onQueueChanged(this.settings);
   }
 }

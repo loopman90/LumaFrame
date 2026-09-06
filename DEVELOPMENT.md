@@ -86,6 +86,7 @@ Rules:
 - Manual navigation clears existing timers.
 - Closing a view clears timers and video resources.
 - Queue regeneration belongs to Modes.
+- Shuffle state is persisted per Profile when remember shuffle is enabled.
 
 ## External File Handling
 
@@ -136,3 +137,4 @@ When changing persisted shape:
 - Keep styles namespaced under `.lumaframe`.
 - Do not add telemetry, external APIs, account systems or cloud processing.
 - Do not permanently delete original media without confirmation.
+- Add file/folder integration through Obsidian context menus when it keeps the UI calmer.

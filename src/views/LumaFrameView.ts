@@ -106,12 +106,37 @@ export class LumaFrameView extends ItemView {
     this.toggleFavorite();
   }
 
+  hideCurrentMedia(): void {
+    const item = this.controller?.hideCurrent();
+    if (!item) return;
+    void this.plugin.saveSettings();
+    new Notice("Hidden from LumaFrame.");
+  }
+
   currentPosition(): number {
     return this.controller?.position() ?? 0;
   }
 
   currentTotal(): number {
     return this.controller?.total() ?? 0;
+  }
+
+  shuffle(): void {
+    const profile = this.plugin.defaultProfile();
+    profile.modeId = "shuffle";
+    delete this.plugin.settings.shuffleStates[profile.id];
+    void this.plugin.saveSettings();
+    void this.startDefaultProfile();
+  }
+
+  toggleInfo(): void {
+    const profile = this.plugin.defaultProfile();
+    const preset = this.plugin.settings.presets.find((candidate) => candidate.id === profile.presetId);
+    if (!preset) return;
+    preset.overlays.showInfo = !preset.overlays.showInfo;
+    void this.plugin.saveSettings();
+    const item = this.controller?.current();
+    this.overlay.update(item, this.currentPosition(), this.currentTotal(), preset.overlays.showInfo);
   }
 
   private createController(profile: GalleryProfile, preset: GalleryPreset, media: MediaItem[]): void {
@@ -127,9 +152,11 @@ export class LumaFrameView extends ItemView {
     this.controller = new PlaybackController(session, this.plugin.settings, profile, preset, this.plugin.playbackModes, {
       onMediaChanged: (item) => void this.renderMedia(item, preset),
       onPausedChanged: (paused) => this.controls.setPaused(paused),
-      onStatsChanged: async () => this.plugin.saveSettings()
+      onStatsChanged: async () => this.plugin.saveSettings(),
+      onQueueChanged: async () => this.plugin.saveSettings()
     });
     this.controller.start(media);
+    if (this.plugin.settings.autoFullscreen) void this.toggleFullscreen(this.contentEl);
   }
 
   private async renderMedia(item: MediaItem | undefined, preset: GalleryPreset): Promise<void> {
@@ -151,7 +178,12 @@ export class LumaFrameView extends ItemView {
 
   private mediaForProfile(profile: GalleryProfile): MediaItem[] {
     const sourceIds = new Set(profile.sourceIds.length > 0 ? profile.sourceIds : this.plugin.settings.sources.map((source) => source.id));
-    return this.plugin.mediaLibrary.index.visible().filter((item) => sourceIds.has(item.sourceId));
+    const sourceMedia = this.plugin.mediaLibrary.index.visible().filter((item) => sourceIds.has(item.sourceId));
+    if (!profile.playlistId) return sourceMedia;
+    const playlist = this.plugin.settings.playlists.find((candidate) => candidate.id === profile.playlistId);
+    if (!playlist) return sourceMedia;
+    const mediaById = new Map(sourceMedia.map((item) => [item.id, item]));
+    return playlist.items.map((item) => mediaById.get(item.mediaId)).filter((item): item is MediaItem => item !== undefined);
   }
 
   private showEmpty(title: string, body: string): void {
@@ -197,6 +229,12 @@ export class LumaFrameView extends ItemView {
       void this.toggleFullscreen(this.contentEl);
     } else if (event.key.toLowerCase() === "g") {
       void this.plugin.openGallery();
+    } else if (event.key.toLowerCase() === "i") {
+      new Notice("Information overlay can be enabled in Presets.");
+    } else if (event.key.toLowerCase() === "m") {
+      new Notice("Video sound is controlled in LumaFrame settings.");
+    } else if (event.key.toLowerCase() === "h") {
+      this.controls.element.toggleClass("lumaframe-controls-hidden", !this.controls.element.hasClass("lumaframe-controls-hidden"));
     }
   }
 

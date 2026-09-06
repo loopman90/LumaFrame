@@ -19,6 +19,8 @@ The first-run experience is deliberately simple:
 - Muted video by default
 - Player view with Previous, Play/Pause, Next, Favorite, Gallery and Fullscreen
 - Gallery grid with favorites and hide-from-LumaFrame actions
+- Gallery actions for adding media to playlists, creating notes, opening vault media, renaming vault media and confirmed deletion
+- Context menu actions for vault media and folders
 - Playback modes: Sequential, Reverse, Shuffle, Smart Shuffle, Favorites Only, Recently Added, On This Day and Surprise Me
 - Presets: Classic Photo Frame, Ambient, Cinematic Ambient, Clean Gallery, Minimal, Dreamy and Dynamic
 - Transition registry with 25+ transitions
@@ -104,7 +106,7 @@ Shuffle creates a real queue. Smart Shuffle uses lightweight local heuristics. S
 
 Playlists answer: **Which specific files should be included and in what order?**
 
-The current foundation keeps Playlists separate and ready for a dedicated drag-and-drop editor.
+Playlists can be created, renamed, deleted and reordered from settings. Media can be added from the Gallery View.
 
 ## Gallery View
 

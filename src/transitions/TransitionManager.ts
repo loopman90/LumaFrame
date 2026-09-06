@@ -10,7 +10,7 @@ export class TransitionManager {
     const token = ++this.token;
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const reduceMotion = preset.motion.reduceMotion || prefersReduced;
-    const transition = this.registry.get(preset.transitions.transitionId, reduceMotion);
+    const transition = this.registry.get(this.resolveTransitionId(preset, reduceMotion), reduceMotion);
     await transition.apply(outgoing, incoming, {
       durationMs: preset.transitions.durationMs,
       reduceMotion
@@ -25,5 +25,18 @@ export class TransitionManager {
 
   cancel(): void {
     this.token += 1;
+  }
+
+  private resolveTransitionId(preset: GalleryPreset, reduceMotion: boolean): string {
+    if (preset.transitions.transitionId !== "random") return preset.transitions.transitionId;
+    if (reduceMotion) return "crossfade";
+    const candidates =
+      preset.transitions.randomCategory === "custom"
+        ? preset.transitions.customTransitionIds.map((id) => this.registry.get(id))
+        : preset.transitions.randomCategory === "all"
+          ? this.registry.all()
+          : this.registry.byCategory(preset.transitions.randomCategory);
+    const usable = candidates.filter((transition) => transition.id !== "none");
+    return usable[Math.floor(Math.random() * usable.length)]?.id ?? "crossfade";
   }
 }
