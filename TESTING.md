@@ -47,7 +47,7 @@ Unsupported media should show a friendly message and playback should continue.
 - Confirm no network requests are introduced.
 - Confirm only explicitly added Sources are scanned.
 - Confirm no media, filenames, folder names or metadata are uploaded.
-- Confirm external folder scanning remains disabled in the community build.
+- Confirm external folder scanning remains disabled in the community build and that users are guided to add vault folders.
 
 ## Release Checks
 

@@ -12,7 +12,7 @@ The first-run experience is deliberately simple:
 
 - Local-first media playback inside Obsidian
 - Explicit vault media Sources
-- Desktop external folder Sources are saved for future support without broad filesystem scanning in the community build
+- Clear guidance when a selected folder is outside the current vault
 - Lightweight media index
 - Image, GIF, WebP, AVIF and common video file detection
 - Video playback that advances only after the video ends
@@ -178,6 +178,10 @@ Sources answer: **Where does the media come from?**
 
 LumaFrame only scans Sources explicitly added by the user. It never scans the whole vault, home directory, Pictures folder, Downloads folder or drives automatically.
 
+Use a folder inside your current Obsidian vault. If you paste an absolute path that points inside the current vault, LumaFrame converts it to the matching vault path automatically.
+
+External desktop folders are not scanned in the community build. Move or copy media into your vault, then add that vault folder as a Source.
+
 ## Profiles
 
 Profiles answer: **Which complete setup should be used?**
@@ -240,6 +244,6 @@ LumaFrame's plugin interface, documentation, settings, commands and user-facing 
 
 ## Troubleshooting
 
-If no media appears, check that at least one Source is enabled and that the folder path is correct.
+If no media appears, check that at least one Source is enabled and that the folder is inside the current vault.
 
 If a video does not play, the device may not support that format. LumaFrame skips unsupported media and continues playback.

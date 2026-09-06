@@ -2,6 +2,12 @@
 
 All notable changes to LumaFrame are documented here.
 
+## 0.1.7
+
+- Converted absolute paths inside the current vault to vault-relative Source paths.
+- Disabled external folder Source input in the community build with clearer guidance.
+- Updated privacy and troubleshooting documentation for Source scanning.
+
 ## 0.1.6
 
 - Added changelog, testing checklist, security policy and GitHub issue templates.

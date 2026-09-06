@@ -5,7 +5,7 @@ export class SourceService {
   createVaultSource(path: string): MediaSource {
     return {
       id: createId("source"),
-      name: folderName(path),
+      name: path ? folderName(path) : "Vault",
       type: "vault",
       path,
       includeSubfolders: true,

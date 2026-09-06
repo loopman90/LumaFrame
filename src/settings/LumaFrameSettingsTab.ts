@@ -1,4 +1,4 @@
-import { Notice, PluginSettingTab, Setting, TFolder, type SettingDefinitionItem } from "obsidian";
+import { FileSystemAdapter, Notice, PluginSettingTab, Setting, TFolder, type SettingDefinitionItem } from "obsidian";
 import type LumaFramePlugin from "../main";
 import type { BackgroundMode, FitMode, GalleryPreset, KenBurnsMode } from "../models/GalleryPreset";
 import type { GalleryProfile } from "../models/GalleryProfile";
@@ -94,6 +94,9 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
       const meta = row.createDiv();
       meta.createEl("strong", { text: source.name });
       meta.createSpan({ text: `${source.type === "vault" ? "Vault" : "External"} · ${source.path}` });
+      if (source.type === "external") {
+        meta.createSpan({ text: "Not scanned in the community build." });
+      }
       new Setting(row)
         .setName("Enabled")
         .addToggle((toggle) =>
@@ -145,7 +148,7 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
 
     new Setting(container)
       .setName("Add Vault Folder")
-      .setDesc("Enter a folder path from this vault, for example Photos/Family.")
+      .setDesc("Enter a folder path from this vault, for example Photos/Family. Absolute paths inside this vault are converted automatically.")
       .addText((text) => {
         text.setPlaceholder("Photos/Family");
         text.inputEl.addClass("lumaframe-source-input");
@@ -160,7 +163,11 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
 
     new Setting(container)
       .setName("Add External Folder")
-      .setDesc(supportsExternalFolders() ? "Enter a full folder path from your computer." : "Folders outside your vault are available on desktop.")
+      .setDesc(
+        supportsExternalFolders()
+          ? "Enter a full folder path from your computer."
+          : "External folders are not scanned in the community build. Move or copy media into your vault, then add that vault folder."
+      )
       .addText((text) => {
         text.setPlaceholder("/Users/name/Pictures/Favorites");
         text.inputEl.addClass("lumaframe-external-source-input");
@@ -607,15 +614,17 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
   }
 
   private async addVaultSource(path: string): Promise<void> {
-    if (!(this.plugin.app.vault.getAbstractFileByPath(path) instanceof TFolder)) {
-      new Notice("This folder is no longer available.");
+    const normalizedPath = this.normalizeVaultFolderPath(path);
+    const folder = normalizedPath ? this.plugin.app.vault.getAbstractFileByPath(normalizedPath) : this.plugin.app.vault.getRoot();
+    if (!(folder instanceof TFolder)) {
+      new Notice("This folder is not inside the current vault.");
       return;
     }
-    if (this.plugin.settings.sources.some((source) => source.type === "vault" && source.path === path)) {
+    if (this.plugin.settings.sources.some((source) => source.type === "vault" && source.path === normalizedPath)) {
       new Notice("This folder is already a LumaFrame Source.");
       return;
     }
-    const source = this.sourceService.createVaultSource(path);
+    const source = this.sourceService.createVaultSource(normalizedPath);
     this.plugin.settings.sources.push(source);
     for (const profile of this.plugin.settings.profiles) {
       if (profile.sourceIds.length === 0 || profile.id === this.plugin.settings.defaultProfileId) {
@@ -624,6 +633,18 @@ export class LumaFrameSettingsTab extends PluginSettingTab {
     }
     await this.saveRefresh();
     this.renderSettings();
+  }
+
+  private normalizeVaultFolderPath(path: string): string {
+    const cleanPath = path.trim().replace(/\\/g, "/").replace(/^\/+|\/+$/g, "");
+    const adapter = this.plugin.app.vault.adapter;
+    if (!(adapter instanceof FileSystemAdapter)) return cleanPath;
+
+    const vaultPath = adapter.getBasePath().replace(/\\/g, "/").replace(/\/+$/g, "");
+    const absolutePath = path.trim().replace(/\\/g, "/").replace(/\/+$/g, "");
+    if (absolutePath === vaultPath) return "";
+    if (!absolutePath.startsWith(`${vaultPath}/`)) return cleanPath;
+    return absolutePath.slice(vaultPath.length + 1);
   }
 
   private async updateProfileMode(profile: GalleryProfile, value: string): Promise<void> {

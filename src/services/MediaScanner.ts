@@ -22,7 +22,7 @@ export class MediaScanner {
 
   private scanVaultSource(source: MediaSource): MediaItem[] {
     const normalizedSourcePath = trimSlashes(source.path);
-    const folder = this.app.vault.getAbstractFileByPath(normalizedSourcePath);
+    const folder = normalizedSourcePath ? this.app.vault.getAbstractFileByPath(normalizedSourcePath) : this.app.vault.getRoot();
     if (!(folder instanceof TFolder)) {
       source.unavailable = true;
       return [];

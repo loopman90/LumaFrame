@@ -78,12 +78,12 @@ export class LumaFrameView extends ItemView {
     const profile = this.plugin.settings.profiles.find((candidate) => candidate.id === this.plugin.settings.defaultProfileId);
     const preset = this.plugin.settings.presets.find((candidate) => candidate.id === profile?.presetId);
     if (!profile || !preset) {
-      this.showEmpty("Add your media", "Choose one or more folders containing photos or videos.");
+      this.showEmpty("Add your media", "Choose one or more vault folders containing photos or videos.");
       return;
     }
     const media = this.mediaForProfile(profile);
     if (media.length === 0) {
-      this.showEmpty("Add your media", "Choose one or more folders containing photos or videos.");
+      this.showEmpty("Add your media", "Choose one or more vault folders containing photos or videos.");
       return;
     }
     this.emptyState.hide();

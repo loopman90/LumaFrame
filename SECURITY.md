@@ -27,7 +27,7 @@ LumaFrame does not include:
 
 LumaFrame only scans folders explicitly added as Sources by the user.
 
-The community build scans vault folders through the Obsidian API. External desktop folders can be saved as Sources for future support, but they are not scanned by direct Node filesystem access in the community build.
+The community build scans vault folders through the Obsidian API. External desktop folders are not scanned by direct Node filesystem access in the community build.
 
 ## Reporting Security Issues
 
