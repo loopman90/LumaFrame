@@ -33,8 +33,8 @@ export class ExternalFolderService {
     }
 
     try {
-      const fs = await import("fs/promises");
-      const path = await import("path");
+      const fs = require("fs/promises") as FsPromises;
+      const path = require("path") as PathModule;
       const rootPath = path.resolve(source.path);
       const files: ExternalFileEntry[] = [];
       await collectMediaFiles(fs, path, rootPath, source.includeSubfolders, files);

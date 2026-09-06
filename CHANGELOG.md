@@ -2,6 +2,10 @@
 
 All notable changes to LumaFrame are documented here.
 
+## 0.1.11
+
+- Changed desktop filesystem loading to guarded `require()` calls for Obsidian review compatibility.
+
 ## 0.1.10
 
 - Made the external folder filesystem guard explicit for Obsidian review scanning.
