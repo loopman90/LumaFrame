@@ -2,6 +2,12 @@
 
 All notable changes to LumaFrame are documented here.
 
+## 0.1.17
+
+- Added a polished first-run empty state with Drop images here, Open folder and Manage Sources actions.
+- Added drag-and-drop import into the `LumaFrame Media` vault folder.
+- Added filename collision handling for dropped media files.
+
 ## 0.1.16
 
 - Added a Hide Quick UI action inside the Quick UI panel.

@@ -1,4 +1,4 @@
-import { ItemView, Notice, WorkspaceLeaf } from "obsidian";
+import { ItemView, Notice, TFolder, WorkspaceLeaf, normalizePath } from "obsidian";
 import type LumaFramePlugin from "../main";
 import type { GalleryPreset } from "../models/GalleryPreset";
 import type { GalleryProfile } from "../models/GalleryProfile";
@@ -12,6 +12,8 @@ import { createId } from "../utils/id";
 import { MediaOverlay } from "../ui/MediaOverlay";
 import { PlaybackControls } from "../ui/PlaybackControls";
 import { QuickControls } from "../ui/QuickControls";
+import { DEFAULT_MEDIA_FOLDER } from "../utils/defaultMediaFolder";
+import { isSupportedMediaPath } from "../utils/mediaTypes";
 import { openPluginSettings } from "../utils/obsidianSettings";
 
 export const LUMAFRAME_VIEW_TYPE = "lumaframe-player";
@@ -79,6 +81,11 @@ export class LumaFrameView extends ItemView {
     root.appendChild(this.controls.element);
     this.registerDomEvent(root, "mousemove", () => this.showControlsBriefly());
     this.registerDomEvent(root, "touchstart", () => this.showControlsBriefly());
+    this.registerDomEvent(this.emptyState, "dragover", (event) => this.handleEmptyDragOver(event));
+    this.registerDomEvent(this.emptyState, "dragleave", () => this.emptyState.removeClass("lumaframe-empty-dragging"));
+    this.registerDomEvent(this.emptyState, "drop", (event) => {
+      void this.handleEmptyDrop(event);
+    });
     this.registerDomEvent(window, "keydown", (event) => this.handleKeydown(event));
     await this.startDefaultProfile();
   }
@@ -94,12 +101,12 @@ export class LumaFrameView extends ItemView {
     const profile = this.plugin.settings.profiles.find((candidate) => candidate.id === this.plugin.settings.defaultProfileId);
     const preset = this.plugin.settings.presets.find((candidate) => candidate.id === profile?.presetId);
     if (!profile || !preset) {
-      this.showEmpty("Add your media", "Choose one or more vault folders containing photos or videos.");
+      this.showEmpty("Drop images here", "Add photos, GIFs or videos to your LumaFrame Media vault folder.");
       return;
     }
     const media = this.mediaForProfile(profile);
     if (media.length === 0) {
-      this.showEmpty("Add your media", "Choose one or more vault folders containing photos or videos.");
+      this.showEmpty("Drop images here", "Add photos, GIFs or videos to your LumaFrame Media vault folder.");
       return;
     }
     this.emptyState.hide();
@@ -213,12 +220,80 @@ export class LumaFrameView extends ItemView {
     this.currentElement = null;
     this.emptyState.empty();
     this.emptyState.show();
-    this.emptyState.createEl("h2", { text: title });
-    this.emptyState.createEl("p", { text: body });
-    const button = this.emptyState.createEl("button", { text: "Manage Sources", cls: "mod-cta" });
-    this.registerDomEvent(button, "click", () => {
+    const panel = this.emptyState.createDiv({ cls: "lumaframe-empty-panel" });
+    panel.createDiv({ cls: "lumaframe-empty-icon", text: "+" });
+    panel.createEl("h2", { text: title });
+    panel.createEl("p", { text: body });
+    panel.createDiv({ cls: "lumaframe-empty-folder", text: DEFAULT_MEDIA_FOLDER });
+    const actions = panel.createDiv({ cls: "lumaframe-empty-actions" });
+    const refreshButton = actions.createEl("button", { text: "Refresh", cls: "mod-cta" });
+    const openButton = actions.createEl("button", { text: "Open folder" });
+    const sourcesButton = actions.createEl("button", { text: "Manage Sources" });
+    panel.createDiv({ cls: "lumaframe-empty-hint", text: "Dropped files are copied into your vault. LumaFrame never uploads media." });
+    this.registerDomEvent(refreshButton, "click", () => {
+      void this.startDefaultProfile();
+    });
+    this.registerDomEvent(openButton, "click", () => {
+      this.openDefaultMediaFolder();
+    });
+    this.registerDomEvent(sourcesButton, "click", () => {
       openPluginSettings(this.app, this.plugin.manifest.id);
     });
+  }
+
+  private handleEmptyDragOver(event: DragEvent): void {
+    event.preventDefault();
+    if (event.dataTransfer) event.dataTransfer.dropEffect = "copy";
+    this.emptyState.addClass("lumaframe-empty-dragging");
+  }
+
+  private async handleEmptyDrop(event: DragEvent): Promise<void> {
+    event.preventDefault();
+    this.emptyState.removeClass("lumaframe-empty-dragging");
+    const files = Array.from(event.dataTransfer?.files ?? []).filter((file) => isSupportedMediaPath(file.name));
+    if (files.length === 0) {
+      new Notice("Drop supported images, GIFs or videos to add them to LumaFrame.");
+      return;
+    }
+
+    await this.plugin.ensureDefaultMediaFolder();
+    let added = 0;
+    for (const file of files) {
+      const targetPath = this.nextAvailableMediaPath(file.name);
+      await this.app.vault.createBinary(targetPath, await file.arrayBuffer());
+      added += 1;
+    }
+
+    new Notice(`Added ${added} file${added === 1 ? "" : "s"} to ${DEFAULT_MEDIA_FOLDER}.`);
+    await this.startDefaultProfile();
+  }
+
+  private nextAvailableMediaPath(fileName: string): string {
+    const safeName = normalizePath(fileName).split("/").pop() ?? "media";
+    const dotIndex = safeName.lastIndexOf(".");
+    const name = dotIndex > 0 ? safeName.slice(0, dotIndex) : safeName;
+    const extension = dotIndex > 0 ? safeName.slice(dotIndex) : "";
+    let index = 1;
+    let targetPath = normalizePath(`${DEFAULT_MEDIA_FOLDER}/${safeName}`);
+    while (this.app.vault.getAbstractFileByPath(targetPath)) {
+      index += 1;
+      targetPath = normalizePath(`${DEFAULT_MEDIA_FOLDER}/${name} ${index}${extension}`);
+    }
+    return targetPath;
+  }
+
+  private openDefaultMediaFolder(): void {
+    const folder = this.app.vault.getAbstractFileByPath(DEFAULT_MEDIA_FOLDER);
+    if (!(folder instanceof TFolder)) {
+      new Notice(`${DEFAULT_MEDIA_FOLDER} is not available yet. Reload LumaFrame to create it.`);
+      return;
+    }
+    const explorer = this.app.workspace.getLeavesOfType("file-explorer")[0]?.view as { revealInFolder?: (folder: TFolder) => void } | undefined;
+    if (explorer?.revealInFolder) {
+      explorer.revealInFolder(folder);
+      return;
+    }
+    new Notice(`Open ${DEFAULT_MEDIA_FOLDER} from the Files pane in your vault.`);
   }
 
   private toggleFavorite(): void {

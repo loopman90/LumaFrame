@@ -16,9 +16,8 @@ import { OnboardingWizard } from "./ui/OnboardingWizard";
 import { LumaFrameSettingsTab } from "./settings/LumaFrameSettingsTab";
 import { GalleryGridView, LUMAFRAME_GALLERY_VIEW_TYPE } from "./views/GalleryGridView";
 import { LumaFrameView, LUMAFRAME_VIEW_TYPE } from "./views/LumaFrameView";
+import { DEFAULT_MEDIA_FOLDER } from "./utils/defaultMediaFolder";
 import { isSupportedMediaPath } from "./utils/mediaTypes";
-
-const DEFAULT_MEDIA_FOLDER = "LumaFrame Media";
 
 export default class LumaFramePlugin extends Plugin {
   settings: LumaFrameSettings = DEFAULT_SETTINGS;
@@ -59,7 +58,7 @@ export default class LumaFramePlugin extends Plugin {
     await this.mediaLibrary.refresh(this.settings);
   }
 
-  private async ensureDefaultMediaFolder(): Promise<void> {
+  async ensureDefaultMediaFolder(): Promise<void> {
     const folderPath = normalizePath(DEFAULT_MEDIA_FOLDER);
     const existing = this.app.vault.getAbstractFileByPath(folderPath);
     if (!existing) {

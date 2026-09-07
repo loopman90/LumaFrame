@@ -13,6 +13,7 @@ The first-run experience is deliberately simple:
 - Local-first media playback inside Obsidian
 - Explicit vault media Sources
 - Automatically creates a `LumaFrame Media` vault folder for photos and videos
+- First-run empty state with drag-and-drop import, Open folder and Manage Sources actions
 - Vault folder selector for macOS, Linux, Windows and mobile
 - Lightweight media index
 - Image, GIF, WebP, AVIF and common video file detection
@@ -140,7 +141,7 @@ Then reload Obsidian.
 ## Quick Start
 
 1. Open LumaFrame settings.
-2. Add photos or videos to the `LumaFrame Media` folder in your vault, or add another vault folder under Sources.
+2. Add photos or videos to the `LumaFrame Media` folder in your vault, drop media onto the empty player, or add another vault folder under Sources.
 3. Choose a Preset.
 4. Choose a Mode.
 5. Run **Open** from the LumaFrame command group.
@@ -182,6 +183,8 @@ Sources answer: **Where does the media come from?**
 LumaFrame only scans Sources explicitly added by the user. It never scans the whole vault, home directory, Pictures folder, Downloads folder or drives automatically.
 
 On startup, LumaFrame creates a `LumaFrame Media` folder in your vault and adds it as a Source. Put photos, GIFs or videos in that folder and LumaFrame will see them.
+
+When the player has no media yet, it shows a first-run empty state. You can drop supported media files onto the player to copy them into `LumaFrame Media`, open the folder in Obsidian's Files pane, or jump straight to Source management.
 
 Use **Choose** in the Source settings to pick a folder from inside your current Obsidian vault. You can also enter a vault path manually. If you paste an absolute path that points inside the current vault, LumaFrame converts it to the matching vault path automatically.
 
