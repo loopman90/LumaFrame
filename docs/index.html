@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="LumaFrame turns local Obsidian vault media into a calm gallery, photo frame and ambient player."
+    />
+    <title>LumaFrame for Obsidian</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Obsidian plugin</p>
+          <h1>LumaFrame</h1>
+          <p class="intro">
+            Turn photos, GIFs and videos from your Obsidian vault into a calm gallery, fullscreen photo frame and ambient media player.
+          </p>
+          <div class="actions">
+            <a class="button primary" href="https://github.com/loopman90/LumaFrame/releases/latest">Download latest release</a>
+            <a class="button" href="https://github.com/loopman90/LumaFrame">View on GitHub</a>
+          </div>
+        </div>
+        <div class="product-panel" aria-label="LumaFrame interface preview">
+          <div class="player-preview">
+            <div class="media-glow"></div>
+            <div class="quick-ui">
+              <span>Mode</span>
+              <strong>Shuffle</strong>
+              <span>Transition</span>
+              <strong>0.8s</strong>
+            </div>
+            <div class="controls">
+              <span>←</span>
+              <span>▶</span>
+              <span>→</span>
+              <span>☆</span>
+              <span>▦</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="band">
+        <div>
+          <h2>Built for local media</h2>
+          <p>
+            LumaFrame creates a <code>LumaFrame Media</code> folder in your vault and scans only vault folders you add as Sources.
+          </p>
+        </div>
+        <div class="feature-grid">
+          <article>
+            <h3>Quick UI</h3>
+            <p>Switch playback modes, adjust transition timing, favorite media and jump to the gallery without opening settings.</p>
+          </article>
+          <article>
+            <h3>Gallery View</h3>
+            <p>Browse media, start playback from a selected item, create notes, hide files from LumaFrame and manage playlists.</p>
+          </article>
+          <article>
+            <h3>Privacy First</h3>
+            <p>No telemetry, accounts, AI processing, cloud sync, analytics or remote database. Media stays local.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="install">
+        <h2>Manual Install</h2>
+        <ol>
+          <li>Download <code>main.js</code>, <code>manifest.json</code> and <code>styles.css</code> from the latest release.</li>
+          <li>Place them in <code>YourVault/.obsidian/plugins/lumaframe/</code>.</li>
+          <li>Restart Obsidian and enable LumaFrame from Community plugins.</li>
+          <li>Add photos or videos to <code>LumaFrame Media</code>, then open LumaFrame.</li>
+        </ol>
+      </section>
+    </main>
+  </body>
+</html>

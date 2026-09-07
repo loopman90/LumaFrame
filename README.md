@@ -147,6 +147,7 @@ Then reload Obsidian.
 
 ## Project Docs
 
+- [Website](https://loopman90.github.io/LumaFrame/)
 - [Changelog](CHANGELOG.md)
 - [Testing checklist](TESTING.md)
 - [Security and privacy](SECURITY.md)
